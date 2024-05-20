@@ -1,14 +1,10 @@
-from package.maths.User import User
-from package.maths.Shapes import *
-from package.maths.Point import Point
+import sys
+from PyQt5.QtWidgets import QApplication
+from package.UI.MainUI import MainUI
 
 def workspace():
-	user = User("Danielle", "dani", 312312, "danini@gmail.com", )
-	print(user.profile())
-	
-	plane = user.getCartesianPlane()
+	ui = MainUI()
+	ui.run()
 
-	plane.UI.run()
-
-if (__name__ == "__main__"):
+if __name__ == "__main__":
 	workspace()
