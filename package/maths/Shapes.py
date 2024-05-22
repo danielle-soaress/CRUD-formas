@@ -2,26 +2,15 @@ from package.maths.Shape import Shape
 
 class Rectangle(Shape):
 	
-    def __init__(self, id, x,y,width,height, fillColor):
-        self.__id = id
-        self.__x = x
-        self.__y = y
-        self.__width = width
-        self.__height = height
-        self.__fillColor = fillColor
-        
-
-    def getX(self):
-        return self.__x 
-
-    def getY(self):
-        return self.__y
+    def __init__(self, id, point1, point2, point3, point4, fillColor):
+        super().__init__(id,[point1,point2,point3,point4], fillColor)
     
     def getWidth(self):
-        return self.__width
+
+        return abs(self.rightMostPoint(self._points).getCoordX()-self.leftMostPoint(self._points).getCoordX())
     
     def getHeight(self):
-        return self.__height
+        return abs(self.lowestPoint(self._points).getCoordY()-self.highestPoint(self._points).getCoordY())
     
     def getFillColor(self):
-        return self.__fillColor
+        return self._fillColor

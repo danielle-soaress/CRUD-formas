@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QPoint, QRect
 from package.UI.Dialogues import *
 from package.maths.CartesianPlane import CartesianPlane
 from package.maths.Shapes import *
+from package.maths.Point import Point
 
 class MainUI():
     def __init__(self):
@@ -33,7 +34,6 @@ class Window(QMainWindow):
 
         font_id = QFontDatabase.addApplicationFont('./font/itim.ttf')
         self.font = QFontDatabase.applicationFontFamilies(font_id)[0]
-        
         self.renderMenu()
 
     def centralize(self):
@@ -42,16 +42,28 @@ class Window(QMainWindow):
         screen.moveCenter(screen_center)
         self.move(screen.topLeft())
 
-    def paintEvent(self, event):
+    def paintEvent(self, event): # this function is responsible for render the figures and other paints
         painter = QPainter(self)
         self.renderMainElements(painter)
-
+        
+        # the calculation to draw the figures consider the following facts:
+        # 1. the values inserted by user aren't converted yet.
+        # 2. there are spaces of 40px from window borders to axis lines
+        # 3. each side of grid squares has 20px.
+        # so, the calculation is: 40+20*(value inserted by user)
+        # to do this, we'll use the "convert" function
+        
         for shape in self.__cartesianPlane.getShapes():
-            print(shape)
-            painter.setBrush(QBrush(QColor(shape.getFillColor())))
             if isinstance(shape, Rectangle):
-                rect = QRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight())
+                painter.setBrush(QBrush(QColor(shape.getFillColor())))
+                rect = QRect(self.convertValue(shape.getAPoint(0).getCoordX()), 
+                             self.height() - self.convertValue(shape.getAPoint(0).getCoordY()), 20*shape.getWidth(),
+                             20*shape.getHeight())
                 painter.drawRect(rect)
+            if isinstance (shape, Point):
+                painter.setBrush(QBrush(QColor('#000')))
+                point = QPoint(self.convertValue(shape.getCoordX()), self.height() - self.convertValue((shape.getCoordY())))
+                painter.drawPoint(point)
 
     def renderMainElements(self, painter):
         painter.setRenderHint(QPainter.Antialiasing) # configurando o estilo de renderização
@@ -116,13 +128,27 @@ class Window(QMainWindow):
         createRectangle.triggered.connect(lambda: self.drawRectangle())
 
         newShape.addAction(createRectangle)
+
+        # to create a rect
+        
+        createPoint = QAction('&Create Point', self)
+        createPoint.setShortcut('Alt+P')
+        createPoint.setIcon(QIcon('./images/rect_icon.png'))
+        createPoint.triggered.connect(lambda: self.drawPoint())
+
+        newShape.addAction(createPoint)
     
-    def open_rectangle_dialog(self):
-        dialog = RectangleDialog()
+    def drawRectangle(self):
+        dialog = RectangleDialog(self)
         if dialog.exec_() == QDialog.Accepted:
-            rect_data = dialog.get_data()
+            rect_data = dialog.getData()
+            self.__cartesianPlane.addShape(Rectangle(rect_data[0], Point(rect_data[1][0], rect_data[1][1]),
+                                                    Point(rect_data[2][0], rect_data[2][1]), Point(rect_data[3][0], rect_data[3][1]), Point(rect_data[4][0], rect_data[4][1]), rect_data[5]))
             self.update()
 
-    def drawRectangle(self):
-        self.__cartesianPlane.addShape(Rectangle(123,300,300,50,100, '#000'))
+    def drawPoint(self):
+        self.__cartesianPlane.addShape(Point(2,2))
         self.update()
+
+    def convertValue(self, value):
+        return 40+20*value

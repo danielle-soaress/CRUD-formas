@@ -7,7 +7,7 @@ class Point():
         self.__coordX = newCoord
 
     def getCoordX(self):
-        return self.__coordX
+        return self.__coordX   
 
     def getCoordY(self):
         return self.__coordY
@@ -15,6 +15,8 @@ class Point():
     def setCoordY(self, newCoord):
         self.__coordY = newCoord
 
+    def getPoint(self):
+        return (self.__coordX,self.__coordY)
     def __eq__(self, other):
         return self.__coordX == other.__coordX and self.__coordY == other.__coordY
 
