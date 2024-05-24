@@ -30,7 +30,7 @@ class Dialog(QDialog):
                 value = widget.toPlainText()
                 if not value:
                     all_filled = False
-            elif isinstance(widget, colorPicker):
+            elif isinstance(widget, ColorPicker):
                 pass
 
         if all_filled:
@@ -71,6 +71,7 @@ class RectangleDialog(Dialog):
         # creating the main layout
         self.layout = QVBoxLayout()
         self.form_layout = QVBoxLayout()
+        self.layout.addLayout(self.form_layout)
         self.defineMainLayout()
         self.setLayout(self.layout)
 
@@ -89,74 +90,63 @@ class RectangleDialog(Dialog):
         (self.input_widgets[4][0].value(), self.input_widgets[4][1].value()),
         self.input_widgets[5].getCurrentColor()
         ]
-    
-    def openDialog(self):
-        if dialog.exec_() == QDialog.Accepted:
-            rect_data = dialog.getData()
-            self.update()
 
     def defineMainLayout(self):
         # shape name input
-        shape_desc = QLabel("Shape name:")
-        shape_name = QLineEdit(self)
-        self.input_widgets.append(shape_name)
-        row = QHBoxLayout()
-        row.addWidget(shape_desc)
-        row.addWidget(shape_name)
-        self.form_layout.addLayout(row)
+        input_name = TextInput('Shape name: ', self)
+        self.input_widgets.append(input_name.inputObject())
 
-        # point 1 input
-        point1_desc = QLabel("Point 1")
-        point1_x = QSpinBox(self)
-        point1_y = QSpinBox(self)
-        self.input_widgets.append((point1_x, point1_y))
-        self.addLineToFormLayout(point1_desc, point1_x, point1_y)
-        self.setSpinBoxSize(point1_x)
-        self.setSpinBoxSize(point1_y)
-
-        # point 2 input
-        point2_desc = QLabel("Point 2")
-        point2_x = QSpinBox(self)
-        point2_y = QSpinBox(self)
-        self.input_widgets.append((point2_x, point2_y))
-        self.addLineToFormLayout(point2_desc, point2_x, point2_y)
-        self.setSpinBoxSize(point2_x)
-        self.setSpinBoxSize(point2_y)
-
-        # point 3 input
-        point3_desc = QLabel("Point 3")
-        point3_x = QSpinBox(self)
-        point3_y = QSpinBox(self)
-        self.input_widgets.append((point3_x, point3_y))
-        self.addLineToFormLayout(point3_desc, point3_x, point3_y)
-        self.setSpinBoxSize(point3_x)
-        self.setSpinBoxSize(point3_y)
-
-        # point 4 input
-        point4_desc = QLabel("Point 4")
-        point4_x = QSpinBox(self)
-        point4_y = QSpinBox(self)
-        self.input_widgets.append((point4_x, point4_y))
-        self.addLineToFormLayout(point4_desc, point4_x, point4_y)
-        self.setSpinBoxSize(point4_x)
-        self.setSpinBoxSize(point4_y)
-
-        self.layout.addLayout(self.form_layout)
+        for i in range (0,4):
+            point = PointInput(f'Point {i+1}', self)
+            self.input_widgets.append(point.inputsObjects())
 
         # color picker input
-        color_picker = colorPicker()
+        color_picker = ColorPicker()
         self.input_widgets.append(color_picker)
         color_picker.addColorPicker(self.layout)
 
-    def addLineToFormLayout(self, desc_label, x_input, y_input):
-        row = QHBoxLayout()
-        row.addWidget(desc_label)
-        row.addWidget(QLabel("x:"))
-        row.addWidget(x_input)
-        row.addWidget(QLabel("y:"))
-        row.addWidget(y_input)
-        self.form_layout.addLayout(row)
-    
-    def setSpinBoxSize(self, spinbox):
-        spinbox.setMinimumWidth(100)
-        spinbox.setMaximumWidth(100)
+class PointDialog(Dialog):
+    def __init__(self, window):
+        super().__init__(window)
+        self.input_widgets = []
+
+        # setting the main config: window title, width and height, icon and layout
+        self.setWindowTitle("Insert Rectangle information")
+        self.setGeometry(300, 300, 300, 200)
+        self.setWindowIcon(QIcon('./images/rect_icon.png'))
+        self.centralize()
+
+        # creating the main layout
+        self.layout = QVBoxLayout()
+        self.form_layout = QVBoxLayout()
+        self.layout.addLayout(self.form_layout)
+        self.defineMainLayout()
+        self.setLayout(self.layout)
+
+        # creating a button box
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.button_box.accepted.connect(lambda: self.accept() if self.checkInputs(self.input_widgets) else self.warning())
+        self.button_box.rejected.connect(self.reject)
+        self.layout.addWidget(self.button_box)
+
+    def getData(self):
+        return [
+            self.input_widgets[0].text(),
+            (self.input_widgets[1][0].value(), self.input_widgets[1][1].value()),
+            self.input_widgets[2].getCurrentColor()
+        ]
+
+    def defineMainLayout(self):
+        # shape name input
+        input_name = TextInput('Point name: ', self)
+        self.input_widgets.append(input_name.inputObject())
+
+        point = PointInput('Coords: ', self)
+        self.input_widgets.append(point.inputsObjects())
+
+        # color picker input
+        color_picker = ColorPicker()
+        color_picker.setCurrentColor('#000')
+        self.input_widgets.append(color_picker)
+        color_picker.addColorPicker(self.layout)
+

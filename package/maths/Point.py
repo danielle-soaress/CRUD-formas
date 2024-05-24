@@ -1,8 +1,13 @@
 class Point():
-    def __init__(self, coordX, coordY):
+    def __init__(self, name, coordX, coordY, fillColor = '#000'):
+        self.__name = name
         self.__coordX = coordX
         self.__coordY = coordY
+        self.__fillColor = fillColor
     
+    def getFillColor(self):
+        return self.__fillColor
+
     def setCoordX(self,newCoord):
         self.__coordX = newCoord
 

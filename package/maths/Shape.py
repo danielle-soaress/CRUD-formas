@@ -8,7 +8,6 @@ class Shape():
 		self._fillColor = fillColor
 		self.sortPoints()
 
-
 	def getAPoint(self, i):
 		return self._points[i]
 

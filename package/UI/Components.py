@@ -1,11 +1,14 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QDoubleSpinBox, QPushButton, QColorDialog, QGraphicsView, QGraphicsScene, QGraphicsRectItem, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDoubleSpinBox, QPushButton, QColorDialog, QGraphicsView, QGraphicsScene, QGraphicsRectItem, QDialogButtonBox, QSpinBox
 from PyQt5.QtGui import QColor, QPixmap
 
-class colorPicker(QWidget):
+class ColorPicker(QWidget):
 
     def __init__(self):
         self.__color = QColor('#0000FF')
     
+    def setCurrentColor(self, color):
+        self.__color = QColor(color)
+
     def getCurrentColor(self):
         return self.__color
 
@@ -36,3 +39,49 @@ class colorPicker(QWidget):
         color_preview_pixmap = QPixmap(20, 20)
         color_preview_pixmap.fill(self.__color)
         self.__color_preview.setPixmap(color_preview_pixmap)
+
+class PointInput(QWidget):
+
+    def __init__(self, text_label, parent = None):
+        super().__init__(parent)
+        self.parent = parent
+
+        self.point_desc = QLabel(text_label)
+        self.x_input_point = QSpinBox(self.parent)
+        self.y_input_point = QSpinBox(self.parent)
+        self.addLineToFormLayout(self.point_desc, self.x_input_point, self.y_input_point)
+        self.setSpinBoxSize(self.x_input_point)
+        self.setSpinBoxSize(self.y_input_point)
+
+    def addLineToFormLayout(self, desc_label, x_input, y_input):
+        row = QHBoxLayout()
+        row.addWidget(desc_label)
+        row.addWidget(QLabel("x:"))
+        row.addWidget(x_input)
+        row.addWidget(QLabel("y:"))
+        row.addWidget(y_input)
+        self.parent.form_layout.addLayout(row)
+    
+    def setSpinBoxSize(self, spinbox):
+        spinbox.setMinimumWidth(100)
+        spinbox.setMaximumWidth(100)
+
+    def inputsObjects(self):
+        return (self.x_input_point, self.y_input_point)
+
+class TextInput(QWidget):
+
+    def __init__(self, text_label, parent = None):
+        super().__init__(parent)
+        self.parent = parent
+
+        self.input_desc = QLabel(text_label)
+        self.input_obj = QLineEdit(parent)
+
+        row = QHBoxLayout()
+        row.addWidget(self.input_desc)
+        row.addWidget(self.input_obj)
+        self.parent.form_layout.addLayout(row)
+
+    def inputObject(self):
+        return self.input_obj
