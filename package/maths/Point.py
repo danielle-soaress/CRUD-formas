@@ -1,3 +1,5 @@
+import math
+
 class Point():
     def __init__(self, name, coordX, coordY, fillColor = '#000'):
         self.__name = name
@@ -5,6 +7,9 @@ class Point():
         self.__coordY = coordY
         self.__fillColor = fillColor
     
+    def getName(self):
+        return self.__name
+
     def getFillColor(self):
         return self.__fillColor
 
@@ -22,14 +27,10 @@ class Point():
 
     def getPoint(self):
         return (self.__coordX,self.__coordY)
-    def __eq__(self, other):
-        return self.__coordX == other.__coordX and self.__coordY == other.__coordY
 
-    def __lt__(self, other):
-        return self.__coordX < other.getCoordX()
+    def distanceTo(self, other):
+        return math.sqrt((self.__coordX - other.getCoordX()) ** 2 + (self.__coordY - other.getCoordY()) ** 2)
 
-    def __gt__(self, other):
-        return self.__coordY > other.getCoordY()
+    def info(self):
+        return f'{self.__name}: ({self.__coordX}, {self.__coordY})'
     
-    def __str__(self):
-        return f"({self.__coordX}, {self.__coordY})"

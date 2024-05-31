@@ -4,10 +4,10 @@ from PyQt5.QtGui import QColor, QPixmap
 class ColorPicker(QWidget):
 
     def __init__(self):
-        self.__color = QColor('#0000FF')
+        self.__color = '#0000FF'
     
     def setCurrentColor(self, color):
-        self.__color = QColor(color)
+        self.__color = color
 
     def getCurrentColor(self):
         return self.__color
@@ -18,10 +18,10 @@ class ColorPicker(QWidget):
             self.__color = color
             self.updateColorPreview()
 
-    def addColorPicker(self, layout):
+    def addColorPicker(self, layout, label):
         color_layout = QHBoxLayout()
 
-        color_label = QLabel(f"Shape color:")
+        color_label = QLabel(f'{label}')
         color_btn = QPushButton("Choose")
         color_btn.clicked.connect(lambda: self.getInputColor())
 
@@ -37,7 +37,7 @@ class ColorPicker(QWidget):
 
     def updateColorPreview(self):
         color_preview_pixmap = QPixmap(20, 20)
-        color_preview_pixmap.fill(self.__color)
+        color_preview_pixmap.fill(QColor(self.__color))
         self.__color_preview.setPixmap(color_preview_pixmap)
 
 class PointInput(QWidget):
