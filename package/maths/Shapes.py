@@ -4,7 +4,6 @@ from itertools import combinations
 import math
 
 class Rectangle(Shape):
-	
     def __init__(self, id, point1, point2, point3, point4, fillColor):
         super().__init__(id,[point1,point2,point3,point4], fillColor)
         if not self.isARect():
@@ -56,3 +55,28 @@ class Triangule(Shape):
         side2 = math.sqrt((self.x3 - self.x2) ** 2 + (self.y3 - self.y2) ** 2)
         side3 = math.sqrt((self.x1 - self.x3) ** 2 + (self.y1 - self.y3) ** 2)
         return side1 + side2 + side3
+
+class Circle(Shape):
+    def __init__(self, id, point1, radius, fillColor):
+        super().__init__(id,[point1], fillColor)
+        self.__radius = radius
+        if not self.isACircle():
+            raise InvalidShape("Please, insert a non-null radius value. ")
+    
+    def getRadius(self):
+        return self.__radius
+
+    def getDiameter(self):
+        return self.__radius*2
+
+    def isACircle(self):
+        if self.__radius <= 0:
+            return False
+        return True 
+
+    def area(self):
+        return math.pi*(self.__radius**2)
+
+    def perimeter(self):
+        return 2*math.pi*self.__radius
+

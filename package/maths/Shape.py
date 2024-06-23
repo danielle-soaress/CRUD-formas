@@ -62,9 +62,6 @@ class Shape():
 	
 		return True if len(set(points)) == len(self._points) else False
 
-		highPoint = max(points, key=lambda ponto: ponto.getCoordY())
-		return highPoint
-
 # string which contains all shape information
 
 	def info(self):

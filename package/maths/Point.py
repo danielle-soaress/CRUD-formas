@@ -28,8 +28,40 @@ class Point():
     def getPoint(self):
         return (self.__coordX,self.__coordY)
 
+    # methods that work with relation between this point and others
+
+    def ArePointsDifferent(self, other):
+        if self.__coordX == other.getCoordX() and self.__coordY == other.getCoordY():
+            return False
+        return True
+    
+    def sort2Points(self, other):
+        x1, y1 = self.__coordX, self.__coordY
+        x2, y2 = other.getCoordX(), other.getCoordY()
+    
+        # Comparação das coordenadas x
+        if x1 < x2:
+            return self, other
+        elif x1 > x2:
+            return other, self
+        else:
+            # Se as coordenadas x são iguais, comparar as coordenadas y
+            if y1 < y2:
+                return self, other
+            else:
+                return other, self
+
     def distanceTo(self, other):
         return math.sqrt((self.__coordX - other.getCoordX()) ** 2 + (self.__coordY - other.getCoordY()) ** 2)
+    
+    def medianBetween(self, other):
+        mx = (self.__coordX + other.getCoordX()) / 2
+        my = (self.__coordY + other.getCoordY()) / 2
+        return (mx, my)
+    
+    # other methods
+    def distanceFromOrigin(self):
+        return math.sqrt(self.__coordX ** 2 + self.__coordY ** 2)
 
     def info(self):
         return f'{self.__name}: ({self.__coordX}, {self.__coordY})'

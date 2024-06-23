@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QDoubleSpinBox, QPushButton, QColorDialog, QGraphicsView, QGraphicsScene, QGraphicsRectItem, QDialogButtonBox, QSpinBox
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QLineEdit, QPushButton, QColorDialog, QSpinBox, QMessageBox
 from PyQt5.QtGui import QColor, QPixmap
 
 class ColorPicker(QWidget):
@@ -42,9 +42,10 @@ class ColorPicker(QWidget):
 
 class PointInput(QWidget):
 
-    def __init__(self, text_label, parent = None):
+    def __init__(self, text_label, parent = None, layout = None):
         super().__init__(parent)
         self.parent = parent
+        self.layout = layout
 
         self.point_desc = QLabel(text_label)
         self.x_input_point = QSpinBox(self.parent)
@@ -60,7 +61,7 @@ class PointInput(QWidget):
         row.addWidget(x_input)
         row.addWidget(QLabel("y:"))
         row.addWidget(y_input)
-        self.parent.form_layout.addLayout(row)
+        self.layout.addLayout(row)
     
     def setSpinBoxSize(self, spinbox):
         spinbox.setMinimumWidth(100)
@@ -85,3 +86,18 @@ class TextInput(QWidget):
 
     def inputObject(self):
         return self.input_obj
+    
+class MessageBox():
+    def __init__(self, parent = None, ):
+        self.parent = parent
+
+    def showMessage(self, title="Alert", message="Something is wrong...", detailed_text="Review your inputs and try again.", icon = QMessageBox.Warning):
+        msg = QMessageBox(self.parent)
+        msg.setIcon(icon)
+        msg.setWindowTitle(title)
+        msg.setText(message)
+        msg.setInformativeText(detailed_text)
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        
+        retval = msg.exec_()
+        return retval
