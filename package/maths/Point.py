@@ -23,6 +23,7 @@ class Point(GeometricEntity):
         return (self.__coordX,self.__coordY)
 
     def isAPoint(self):
+<<<<<<< HEAD
         if (self.__coordX < 0 or self.__coordY < 0):
             return False
         else:
@@ -31,6 +32,14 @@ class Point(GeometricEntity):
             elif not ((isinstance(self.__coordY, int) or 
                     (isinstance(self.__coordY, float) and self.__coordY.is_integer()))):
                 return False
+=======
+        if not ((isinstance(self.__coordX, int) or 
+                (isinstance(self.__coordX, float) and self.__coordX.is_integer()))):
+            return False
+        elif not ((isinstance(self.__coordY, int) or 
+                (isinstance(self.__coordY, float) and self.__coordY.is_integer()))):
+            return False
+>>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
         
         return True
 

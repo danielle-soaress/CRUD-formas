@@ -1,6 +1,10 @@
 from PyQt5.QtWidgets import  QAction, QDialog
 from PyQt5.QtGui import QIcon
+<<<<<<< HEAD
 from package.UI.dialogues.ShapesDialog import RectangleDialog
+=======
+from package.UI.dialogues.RectangleDialog import RectangleDialog
+>>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
 from package.maths.Shapes import Rectangle
 from package.maths.Point import Point
 
@@ -16,6 +20,10 @@ class Menu():
         rectmenu = self.__menubar.addMenu('&Rectangle')
 
         # to create a rect
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
         createRectangle = QAction('&Create Rectangle', self.__ui)
         createRectangle.setShortcut('Alt+R')
         createRectangle.triggered.connect(lambda: self.drawRectangle())
