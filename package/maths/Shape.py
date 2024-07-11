@@ -1,13 +1,29 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from package.maths.GeometricEntity import GeometricEntity
 
-class Shape():
+class Shape(GeometricEntity):
 
-	def __init__(self, id, points, fillEnabled, fillColor = None):
-		self.__id = id
-		self.__points = points
-		self.__fillEnabled = fillEnabled
-		self.__fillColor = fillColor
+	def __init__(self, name, points, fillColor):
+		super().__init__(name, fillColor)
+		self._points = points
+		
+		if not self.ArePointsDifferent():
+			return None
+		
+		self.sortPoints()
 
+# some getters and setters
+
+	def getAPoint(self, i):
+		return self._points[i]
+
+	def getPoints(self):
+		return self._points
+
+	def setAPoint(self, i, value):
+		self._points[i-1] = value
+		
+# abstract methods: (each class will develop it by itself)
 	@abstractmethod
 	def area(self):
 		pass
@@ -19,26 +35,22 @@ class Shape():
 	@abstractmethod
 	def model(self):
 		pass
-
-	@abstractmethod
-	def draw(self):
-		pass
-
-	def remove(self):
-		pass
 	
-	def leftMostPoint(self, points):
-		LeftPoint = min(points, key=lambda ponto: ponto.getCoordX())
-		return LeftPoint
+# points methods: as each shape has many points (3 or more), each one must be responsible for deal with their set of point, 
+# such as organizinge them, define how they will interact and the rules they must follow.
+	
+	def sortPoints(self):
+		sorted_points = sorted(self._points, key=lambda p: (p.getCoordX(), p.getCoordY()))
+		self._points = sorted_points
+		
+		points = []
+		for p in sorted_points:
+			points.append(p.getPoint())
 
-	def rightMostPoint(self, points):
-		RightPoint = max(points, key=lambda ponto: ponto.getCoordX())
-		return RightPoint
+	def ArePointsDifferent(self):
+		points = []
 
-	def lowestPoint(self, points):
-		lowPoint = min(points, key=lambda ponto: ponto.getCoordY())
-		return lowPoint
-
-	def highestPoint(self, points):
-		highPoint = max(points, key=lambda ponto: ponto.getCoordY())
-		return highPoint
+		for p in self._points:
+			points.append(p.getPoint())
+	
+		return True if len(set(points)) == len(self._points) else False
