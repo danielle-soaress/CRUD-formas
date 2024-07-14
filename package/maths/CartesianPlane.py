@@ -13,8 +13,7 @@ class CartesianPlane():
     def setEntities(self, list):
         for i in list:
             if not (isinstance(i, GeometricEntity)):
-                print("All objects must be Geometric entities!")
-                return 
+                raise InvalidAction("All objects must be Geometric entities!")
         
         self.__entities = list
                 
@@ -24,7 +23,6 @@ class CartesianPlane():
     def getAEntitieByName(self, name): # this function returns a specific figure
         for entity in self.__entities:
             if entity.getName() == name:
-                print(entity)
                 return entity
         return None
     
@@ -40,11 +38,8 @@ class CartesianPlane():
         self.__entities = []
 
     def addEntity(self, entity):
-        try:
-            if self.canAddEntity(entity):
-                self.__entities.append(entity)
-        except InvalidAction as e:
-            print('This figure already exists in the Cartesian Plane.')
+        if self.canAddEntity(entity):
+            self.__entities.append(entity)
 
     def deleteEntity(self, shape_name):
         for entity in self.__entities:

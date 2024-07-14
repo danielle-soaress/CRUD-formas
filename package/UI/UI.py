@@ -1,12 +1,14 @@
-import sys
-import os
-from PyQt5.QtWidgets import QMainWindow,  QDesktopWidget
+
+from PyQt5.QtWidgets import QMainWindow,  QDesktopWidget, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtGui import QPainter, QPen, QColor, QPolygon, QBrush
-from PyQt5.QtCore import Qt, QPoint, QRect
+from PyQt5.QtCore import Qt, QPoint, QRect, QPointF, QLineF, QRectF, QSizeF
 
 from package.UI.components.Menu import Menu
+from package.UI.dialogues.InformativeDialogues import FigureInfoDialog
 from package.maths.Shape import Shape
-from package.maths.Shapes import Rectangle
+from package.maths.Shapes import *
+from package.maths.Point import Point
+from package.maths.Line import *
 
 
 ##
@@ -31,6 +33,9 @@ class UI(QMainWindow):
         self.__menu = Menu(self)
         self.__menu.render()
 
+        self.figure_texts = []
+        self.setMouseTracking(True)
+
     def getCartesianPlane(self):
         return self.__cartesianPlane
     
@@ -47,7 +52,9 @@ class UI(QMainWindow):
         pen = QPen(QColor('#000'))
         pen.setWidth(2)
         painter.setPen(pen)
-        
+
+        self.figure_texts = []
+
         # the calculation to draw the figures consider the following facts:
         # 1. the values inserted by user aren't converted yet.
         # 2. there are spaces of 40px from window borders to axis lines
@@ -63,6 +70,77 @@ class UI(QMainWindow):
                                 self.height() - self.convertValue(figure.getAPoint(1).getCoordY()), 20*figure.width(),
                                 20*figure.height())
                     painter.drawRect(rect)
+
+                    text_position = rect.topRight() + QPointF(20, -20)
+                elif isinstance(figure, Triangule):
+                    triangule = QPolygon([
+                        QPoint(self.convertValue(figure.getAPoint(0).getCoordX()), self.height() - self.convertValue(figure.getAPoint(0).getCoordY())),
+                        QPoint(self.convertValue(figure.getAPoint(1).getCoordX()), self.height() - self.convertValue(figure.getAPoint(1).getCoordY())),
+                        QPoint(self.convertValue(figure.getAPoint(2).getCoordX()), self.height() - self.convertValue(figure.getAPoint(2).getCoordY()))
+                    ])
+                    painter.drawPolygon(triangule)
+                    text_position = triangule.boundingRect().topRight() + QPointF(5, -5)
+                elif isinstance(figure, Circle):
+                    radius = 20*figure.getRadius()
+                    painter.drawEllipse(self.convertValue(figure.getAPoint(0).getCoordX()) - radius, self.height() - radius - self.convertValue(figure.getAPoint(0).getCoordY()), 2*radius, 2*radius)
+                    text_position = QPointF(self.convertValue(figure.getAPoint(0).getCoordX()) + radius + 2, self.height() - self.convertValue(figure.getAPoint(0).getCoordY()) - radius - 2)
+            elif isinstance(figure, Point):
+                point = QPoint(self.convertValue(figure.getCoordX()), self.height() - self.convertValue((figure.getCoordY())))
+                painter.drawEllipse(point, 4, 4)
+                text_position = point + QPointF(-25, -20)
+            elif isinstance(figure, LineSegment):
+                point1 = QPointF(self.convertValue(figure.getPoint1().getCoordX()), self.height() - self.convertValue(figure.getPoint1().getCoordY()))
+                point2 = QPointF(self.convertValue(figure.getPoint2().getCoordX()), self.height() - self.convertValue(figure.getPoint2().getCoordY()))
+            
+                # calculate the line that pass through the two points 
+                line = QLineF(point1, point2)
+                painter.drawLine(line)
+
+                # draw the points
+                painter.setBrush(QBrush(QColor(figure.getFillColor())))
+                painter.drawEllipse(point1, 4, 4)
+                painter.drawEllipse(point2, 4, 4)
+                text_position = (point1 + point2) / 2 + QPointF(5, -5)
+            elif isinstance(figure, Line):
+                point1 = QPointF(self.convertValue(figure.getPoint1().getCoordX()), self.height() - self.convertValue(figure.getPoint1().getCoordY()))
+                point2 = QPointF(self.convertValue(figure.getPoint2().getCoordX()), self.height() - self.convertValue(figure.getPoint2().getCoordY()))
+            
+                # calculate the line that pass through the two points 
+                line = QLineF(point1, point2)
+
+                # maximum line extension beyond the window limits
+                length = max(self.width(), self.height())  
+                infinite_line = QLineF()
+                infinite_line.setP1(line.pointAt(-length))
+                infinite_line.setP2(line.pointAt(2 * length))
+
+                painter.setBrush(QBrush(QColor('#000')))
+                painter.drawLine(infinite_line)
+
+                # draw the points
+                painter.setBrush(QBrush(QColor(figure.getFillColor())))
+                painter.drawEllipse(point1, 4, 4)
+                painter.drawEllipse(point2, 4, 4)
+                text_position = (point1 + point2) / 2 + QPointF(5, -5)
+
+            text_rect = QRectF(text_position, QSizeF(50, 20))  # Adjust size as needed
+            self.figure_texts.append((text_rect, figure))
+            painter.drawText(text_rect, Qt.AlignLeft, figure.getName())
+
+    def mouseMoveEvent(self, event):
+        for text_rect, _ in self.figure_texts:
+            if text_rect.contains(event.pos()):
+                self.setCursor(Qt.PointingHandCursor)
+                return
+        self.setCursor(Qt.ArrowCursor)
+
+    def mousePressEvent(self, event):
+        for text_rect, figure in self.figure_texts:
+            if text_rect.contains(event.pos()):
+                dialog = FigureInfoDialog(figure, self)
+                dialog.exec_()
+                self.update()  # Redraw to update any changes in figure info
+                break
 
     def renderMainElements(self, painter):  # to render the grid and axes and their markers.
 

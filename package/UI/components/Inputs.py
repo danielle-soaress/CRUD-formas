@@ -69,12 +69,9 @@ class PointInput(QWidget):
 
     def inputsObjects(self):
         return (self.x_input_point, self.y_input_point)
-<<<<<<< HEAD
     
     def getInputsValue(self):
         return (self.x_input_point.value(), self.y_input_point.value())
-=======
->>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
 
 class TextInput(QWidget):
 

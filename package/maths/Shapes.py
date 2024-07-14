@@ -1,6 +1,8 @@
+import math
+import textwrap
+
 from package.maths.Shape import Shape
 from itertools import combinations
-import math
 from package.exceptions.Exceptions import InvalidAction
 
 class Rectangle(Shape):
@@ -102,21 +104,21 @@ class Triangule(Shape):
         return math.degrees(angle1), math.degrees(angle2), math.degrees(angle3)
 
     def model(self):
-        return (
-        f'''
-        ------ Basic Information -------------
-        Name: {self._name}
-        Fill Color: {self._fillColor}
-        Points: {list(map(lambda x: x.getPoint(), self.getPoints()))}
+        return textwrap.dedent(
+            f'''
+            ------ Basic Information -------------
+            Name: {self._name}
+            Fill Color: {self._fillColor}
+            Points: {list(map(lambda x: x.getPoint(), self.getPoints()))}
 
-        ------ Functions Information --------
-        Classification: {self.classify()}
-        Area: {self.area():.2f}
-        Perimeter: {self.perimeter():.2f}
-        Hypotenuse: {self.hypotenuse():.2f}
-        Sides: {', '.join([f"{side:.2f}" for side in self.sides()])}
-        Internal Angles: {', '.join([f"{angle:.2f}" for angle in self.angles()])}
-        '''
+            ------ Functions Information --------
+            Classification: {self.classify()}
+            Area: {self.area():.2f}
+            Perimeter: {self.perimeter():.2f}
+            Hypotenuse: {self.hypotenuse():.2f}
+            Sides: {', '.join([f"{side:.2f}" for side in self.sides()])}
+            Internal Angles: {', '.join([f"{angle:.2f}" for angle in self.angles()])}
+            '''
         )
 
 class Circle(Shape):

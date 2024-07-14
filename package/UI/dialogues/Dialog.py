@@ -1,45 +1,30 @@
 from abc import abstractmethod
-<<<<<<< HEAD
-from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit, QVBoxLayout, QDialogButtonBox
+from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit, QVBoxLayout, QDialogButtonBox, QFormLayout, QComboBox, QStackedWidget
 from package.UI.components.Inputs import *
 from package.exceptions.Exceptions import InvalidAction
 
-=======
-from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit
-from package.UI.components.Inputs import *
->>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
 
 class Dialog(QDialog):
     def __init__(self, ui, title, geometry = [300,300,300,200]):
         super().__init__()
         self._ui = ui
-<<<<<<< HEAD
         self._input_widgets = []
 
         # general settings
-=======
-
->>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
         self.setWindowTitle(title)
         self.setGeometry(geometry[0], geometry[1], geometry[2], geometry[3])
         self.centralize()
 
-<<<<<<< HEAD
         # creating the main layout
         self.layout = QVBoxLayout()
         self.form_layout = QVBoxLayout()
         self.layout.addLayout(self.form_layout)
-        self.defineMainLayout(4)
-        self.setLayout(self.layout)
-
+        
         # creating a button box
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(lambda: self.accept() if self.AreInputsValid() else None)
         self.button_box.rejected.connect(self.reject)
-        self.layout.addWidget(self.button_box)
 
-=======
->>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
     def centralize(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -72,7 +57,6 @@ class Dialog(QDialog):
     
     @abstractmethod
     def AreInputsValid(self):
-<<<<<<< HEAD
         if not self.AreInputsFilled(self._input_widgets):
             raise InvalidAction('Incomplete information! You must fill all fields.')
         pass
@@ -92,37 +76,59 @@ class Dialog(QDialog):
                 data.append(widget.getCurrentColor())
         return data
 
-    def defineMainLayout(self, n_points):
+
+    @abstractmethod
+    def defineMainLayout(self):
+        pass
+    
+    def createEntityForm(self, n_points, circle = False):
         # shape name input
         input_name = TextInput('Shape name: ', self)
         self._input_widgets.append(input_name.inputObject())
         print(self._input_widgets)
 
-        for i in range (0, n_points):
-            point = PointInput(f'Point {i+1}', self, self.form_layout)
+        if circle:
+            # radius input
+            row = QHBoxLayout()
+            row.addWidget(QLabel("Radius: "))
+            radius_input = QSpinBox(self)
+            row.addWidget(radius_input)
+            self.form_layout.addLayout(row)
+            
+            #central point
+            point = PointInput(f'Central Point: ', self, self.form_layout)
             self._input_widgets.append(point)
-
+            self._input_widgets.append(radius_input)
+        else:
+            for i in range (0, n_points):
+                point = PointInput(f'Point: ', self, self.form_layout)
+                self._input_widgets.append(point)
+        
         # color picker input
         color_picker = ColorPicker()
         self._input_widgets.append(color_picker)
-=======
-        pass
-
-    @abstractmethod
-    def getData(self):
-        pass
-    
-    def defineMainLayout(self, n_points):
-        # shape name input
-        input_name = TextInput('Shape name: ', self)
-        self.input_widgets.append(input_name.inputObject())
-
-        for i in range (0, n_points):
-            point = PointInput(f'Point {i+1}', self, self.form_layout)
-            self.input_widgets.append(point.inputsObjects())
-
-        # color picker input
-        color_picker = ColorPicker()
-        self.input_widgets.append(color_picker)
->>>>>>> 7c5d97ad7519b133910929f96041d8df5f8a9019
         color_picker.addColorPicker(self.layout, 'Shape color: ')
+    
+    def dupleForm(self, options, form1, form2):
+        comboBox = QComboBox(self)
+        comboBox.addItems(options)
+        self._input_widgets.append(comboBox)
+        
+        # Conectar o sinal de mudança de seleção a um método
+        comboBox.currentIndexChanged.connect(self.onSelectionChange)
+
+
+        # Criação do QStackedWidget para alternar entre os formulários
+        self.stackedWidget = QStackedWidget()
+        self.stackedWidget.addWidget(form1)
+        self.stackedWidget.addWidget(form2)
+
+        # Adicionar o QComboBox e o QStackedWidget ao layout
+        self.layout.addWidget(comboBox)
+        self.layout.addWidget(self.stackedWidget)
+
+        self.setLayout(self.layout)
+
+    def onSelectionChange(self, index):
+        # Alternar o QStackedWidget para exibir o formulário apropriado
+        self.stackedWidget.setCurrentIndex(index) 

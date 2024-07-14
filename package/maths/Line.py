@@ -1,6 +1,7 @@
 import math
 from package.maths.Point import Point
 from package.maths.GeometricEntity import GeometricEntity
+from package.exceptions.Exceptions import InvalidAction
 
 # in this file, there are two classes: Line and SegmentLine
 # a line is infinite, while a line segment is finite and has a length.
@@ -11,7 +12,7 @@ class Line(GeometricEntity):
         self._points = [p1, p2]
         
         if not self.isLine():
-            return 'Insira dados inválidos.'
+            raise InvalidAction("Invalid Line. Certify if the numbers are integers.")
 
     # getters and setters
 
@@ -115,7 +116,7 @@ class LineSegment(Line):
         super().__init__(name, p1, p2, fillColor)
         
         if not self.isLine():
-            return 'Insira dados inválidos.'
+            raise InvalidAction("Invalid Line Segment. Certify if the numbers are integers.")
         
     def length(self):
         result = math.sqrt((self._points[0].getCoordX() - self._points[1].getCoordX())** 2 + (self._points[0].getCoordY() - self._points[1].getCoordY()) ** 2)
