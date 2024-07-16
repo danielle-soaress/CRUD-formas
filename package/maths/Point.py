@@ -1,5 +1,5 @@
 import math
-
+import textwrap
 from package.maths.GeometricEntity import GeometricEntity
 from package.exceptions.Exceptions import InvalidAction
 
@@ -71,7 +71,7 @@ class Point(GeometricEntity):
         return math.sqrt(self.__coordX ** 2 + self.__coordY ** 2)
 
     def model(self):
-        return (
+        return textwrap.dedent(
         f'''
         ------ Basic Information ------------
         Name: {self._name}

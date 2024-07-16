@@ -36,7 +36,7 @@ class Rectangle(Shape):
         return self.width()*2+self.height()*2
     
     def model(self):
-        return (
+        return textwrap.dedent(
         f'''
         ------ Basic Information -------------
         Name: {self._name}
@@ -150,7 +150,7 @@ class Circle(Shape):
         return 2*math.pi*self.__radius
 
     def model(self):
-        return (
+        return textwrap.dedent(
         f'''
         ------ Basic Information ------------
         Name: {self._name}

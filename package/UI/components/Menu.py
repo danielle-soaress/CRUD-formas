@@ -4,6 +4,7 @@ from package.UI.dialogues.GeometricEntitiesDialogues import *
 from package.maths.Shapes import *
 from package.maths.Line import *
 from package.maths.Point import Point
+from package.UI.dialogues.InformativeDialogues import *
 
 class Menu():
     def __init__(self, UI):
@@ -12,13 +13,13 @@ class Menu():
 
 
     def render(self):
+        self.Entities()
         self.rectMenu()
         self.trianguleMenu()
         self.circleMenu()
         self.pointMenu()
         self.lineMenu()
 
-    
     def rectMenu(self):
         rectmenu = self.__menubar.addMenu('&Rectangle')
 
@@ -73,6 +74,21 @@ class Menu():
         createLineSegment.triggered.connect(lambda: self.drawEntity('lineSegment'))
 
         lineMenu.addAction(createLineSegment)
+
+    def Entities(self):
+        entitiesMenu = self.__menubar.addMenu('&All Entities')
+
+        # to create a triangule   
+        manageEntities = QAction('&Manage Entities', self.__ui)
+        manageEntities.setShortcut('Alt+0')
+        manageEntities.triggered.connect(lambda: AllFiguresInformation(self.__ui, "Manage Entities").open())
+        entitiesMenu.addAction(manageEntities)
+
+        # to create a triangule   
+        deleteEntities = QAction('&Delete All Entities', self.__ui)
+        deleteEntities.setShortcut('Alt+D')
+        deleteEntities.triggered.connect(lambda: DeleteEntities(self.__ui, "Delete All Entities").open())
+        entitiesMenu.addAction(deleteEntities)
 
     def drawEntity(self, type):
         if type == 'rect':

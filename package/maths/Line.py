@@ -1,4 +1,5 @@
 import math
+import textwrap
 from package.maths.Point import Point
 from package.maths.GeometricEntity import GeometricEntity
 from package.exceptions.Exceptions import InvalidAction
@@ -98,7 +99,7 @@ class Line(GeometricEntity):
         return "The lines don't intersect"
 
     def model(self):
-        return (
+        return textwrap.dedent(
         f'''
         ------ Basic Information ------------
         Name: {self._name}
@@ -123,7 +124,7 @@ class LineSegment(Line):
         return result
     
     def model(self):
-        return (
+        return textwrap.dedent(
         f'''
         ------ Basic Information ------------
         Name: {self._name}
