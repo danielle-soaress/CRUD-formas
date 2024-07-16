@@ -1,8 +1,13 @@
 from abc import abstractmethod
+from package.exceptions.Exceptions import InvalidAction
 
 class GeometricEntity():
     def __init__(self, name, fillColor):
-        self._name = name
+        if (len(name) <11 and len(name) > 0):
+            self._name = name
+        else:
+            raise InvalidAction("The name must be 0 to 10 characters long. ")
+        
         self._fillColor = fillColor
 
     def getName(self):
@@ -12,8 +17,11 @@ class GeometricEntity():
         return self._fillColor
     
     def setName(self, name):
-        self._name = name
-
+        if (len(name) <11 and len(name) > 0):
+            self._name = name
+        else:
+            raise InvalidAction("The name must be 0 to 10 characters long. ")
+            
     def setFillColor(self, fillColor):
         self._fillColor = fillColor
 

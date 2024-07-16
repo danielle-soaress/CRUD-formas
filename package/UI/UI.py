@@ -71,7 +71,7 @@ class UI(QMainWindow):
                                 20*figure.height())
                     painter.drawRect(rect)
 
-                    text_position = rect.topRight() + QPointF(20, -20)
+                    text_position = rect.topRight() + QPointF(10, -10)
                 elif isinstance(figure, Triangule):
                     triangule = QPolygon([
                         QPoint(self.convertValue(figure.getAPoint(0).getCoordX()), self.height() - self.convertValue(figure.getAPoint(0).getCoordY())),

@@ -81,7 +81,7 @@ class TextInput(QWidget):
 
         self.input_desc = QLabel(text_label)
         self.input_obj = QLineEdit(parent)
-
+        self.input_obj.setMaxLength(10)
         row = QHBoxLayout()
         row.addWidget(self.input_desc)
         row.addWidget(self.input_obj)
