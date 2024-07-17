@@ -2,7 +2,7 @@ from package.UI.dialogues.Dialog import Dialog
 from package.maths.Point import Point
 from package.maths.Line import *
 from package.maths.Shapes import *
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 from package.UI.components.MessageBox import MessageBox
 from package.UI.components.Inputs import *
 from PyQt5.QtWidgets import QFormLayout
@@ -32,6 +32,9 @@ class RectangleDialog(Dialog):
             
             self._ui.getCartesianPlane().canAddEntity(rect) # to verify if this shape already exists in the plane
         except InvalidAction as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
             return False
         
@@ -67,6 +70,9 @@ class TrianguleDialog(Dialog):
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
             return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
         
         return True
 
@@ -95,6 +101,9 @@ class CircleDialog(Dialog):
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
             return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
         
         return True
     
@@ -118,6 +127,9 @@ class PointDialog(Dialog):
             
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
             return False
         

@@ -5,6 +5,7 @@ from package.maths.Shapes import *
 from package.maths.Line import *
 from package.maths.Point import Point
 from package.UI.dialogues.InformativeDialogues import *
+from package.UI.dialogues.PointFunctionsDialogues import *
 
 class Menu():
     def __init__(self, UI):
@@ -55,10 +56,26 @@ class Menu():
 
         # to create a Point   
         createPoint = QAction('&Create Point', self.__ui)
-        createPoint.setShortcut('AAlt+4')
+        createPoint.setShortcut('Alt+4')
         createPoint.triggered.connect(lambda: self.drawEntity('point'))
 
         pMenu.addAction(createPoint)
+
+        # relation between 2 points
+        distanceBetween = QAction('&Distance between two points', self.__ui)
+        distanceBetween.setShortcut('Shift+D')
+        distanceBetween.triggered.connect(lambda: None)
+        distanceBetween.triggered.connect(lambda: self.pointActions('distanceBetween'))
+
+        pMenu.addAction(distanceBetween)
+
+        # relation between 2 points
+        medianBetween = QAction('&Median between two points', self.__ui)
+        medianBetween.setShortcut('Shift+D')
+        medianBetween.triggered.connect(lambda: None)
+        medianBetween.triggered.connect(lambda: self.pointActions('medianBetween'))
+
+        pMenu.addAction(medianBetween)
     
     def lineMenu(self):
         lineMenu = self.__menubar.addMenu('&Line')
@@ -96,26 +113,26 @@ class Menu():
             if dialog.exec_() == QDialog.Accepted:
                 rect_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(Rectangle(rect_data[0], 
-                                                                Point(f'{rect_data[0]} - P1',rect_data[1][0], rect_data[1][1]), 
-                                                                Point(f'{rect_data[0]} - P2', rect_data[2][0], rect_data[2][1]), 
-                                                                Point(f'{rect_data[0]} - P3', rect_data[3][0], rect_data[3][1]), 
-                                                                Point(f'{rect_data[0]} - P4', rect_data[4][0], rect_data[4][1]), 
+                                                                Point('Point 1',rect_data[1][0], rect_data[1][1]), 
+                                                                Point('Point 2', rect_data[2][0], rect_data[2][1]), 
+                                                                Point('Point 3', rect_data[3][0], rect_data[3][1]), 
+                                                                Point('Point 4', rect_data[4][0], rect_data[4][1]), 
                                                                 rect_data[5]))
         elif type == 'triangule':
             dialog = TrianguleDialog(self.__ui)
             if dialog.exec_() == QDialog.Accepted:
                 triang_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(Triangule(triang_data[0], 
-                                                                Point(f'{triang_data[0]} - P1',triang_data[1][0], triang_data[1][1]), 
-                                                                Point(f'{triang_data[0]} - P2', triang_data[2][0], triang_data[2][1]), 
-                                                                Point(f'{triang_data[0]} - P3', triang_data[3][0], triang_data[3][1]), 
+                                                                Point('Point 1',triang_data[1][0], triang_data[1][1]), 
+                                                                Point('Point 2', triang_data[2][0], triang_data[2][1]), 
+                                                                Point('Point 3', triang_data[3][0], triang_data[3][1]), 
                                                                 triang_data[4]))
         elif type == 'circle':
             dialog = CircleDialog(self.__ui)
             if dialog.exec_() == QDialog.Accepted:
                 circle_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(Circle(f'{circle_data[0]}',
-                                                        Point(f'{circle_data[1]} - P1', circle_data[1][0], circle_data[1][1]), 
+                                                        Point('Central Point', circle_data[1][0], circle_data[1][1]), 
                                                         circle_data[2],
                                                         circle_data[3],
                                                         ))
@@ -129,16 +146,41 @@ class Menu():
             if dialog.exec_() == QDialog.Accepted:
                 line_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(Line(line_data[0], 
-                                                            Point(f'{line_data[0]} - P1',line_data[1][0], line_data[1][1]), 
-                                                            Point(f'{line_data[0]} - P2', line_data[2][0], line_data[2][1]), 
+                                                            Point('Point 1',line_data[1][0], line_data[1][1]), 
+                                                            Point('Point 2', line_data[2][0], line_data[2][1]), 
                                                             line_data[3]))
         elif type == 'lineSegment':
             dialog = LineSegmentDialog(self.__ui)
             if dialog.exec_() == QDialog.Accepted:
                 line_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(LineSegment(line_data[0], 
-                                                                    Point(f'{line_data[0]} - P1',line_data[1][0], line_data[1][1]), 
-                                                                    Point(f'{line_data[0]} - P2', line_data[2][0], line_data[2][1]), 
+                                                                    Point('Point 1',line_data[1][0], line_data[1][1]), 
+                                                                    Point('Point 2', line_data[2][0], line_data[2][1]), 
                                                                     line_data[3]))
         
         self.__ui.update()
+
+    def pointActions(self, action):
+        plane = self.__ui.getCartesianPlane()
+        if action == 'distanceBetween':
+            dialog = PointActionsDialog(self.__ui)
+            if dialog.exec_() == QDialog.Accepted:
+                data = dialog.getData()
+                p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+                p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+                result = p1.distanceTo(p2)
+
+                OperationResult(self.__ui, 
+                                f'The result of "Distance Between Two Points" operation is: <b>{result:2f}</b>'
+                                ).open()
+        if action == 'medianBetween':
+            dialog = PointActionsDialog(self.__ui)
+            if dialog.exec_() == QDialog.Accepted:
+                data = dialog.getData()
+                p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+                p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+                result = p1.medianBetween(p2)
+
+                OperationResult(self.__ui, 
+                                f'The result of "Median Between Two Points" operation is: <b>{result}</b>'
+                                ).open()

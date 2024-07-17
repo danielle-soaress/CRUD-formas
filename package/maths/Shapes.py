@@ -3,7 +3,7 @@ import textwrap
 
 from package.maths.Shape import Shape
 from itertools import combinations
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 
 class Rectangle(Shape):
     def __init__(self, name, point1, point2, point3, point4, fillColor):
@@ -127,7 +127,8 @@ class Circle(Shape):
         self.__radius = radius
 
         if not self.isACircle():
-            raise InvalidAction("The points did not form a circle.")
+            raise InvalidAction("The radius value must be between 1 to 10.")
+    
     def getRadius(self):
         return self.__radius
 
@@ -138,7 +139,7 @@ class Circle(Shape):
         if not ((isinstance(self.__radius, int) or 
                 (isinstance(self.__radius, float) and self.__radius.is_integer()))):
             return False
-        if self.__radius <= 0:
+        if self.__radius <= 0 or self.__radius > 10:
             return False
 
         return True 

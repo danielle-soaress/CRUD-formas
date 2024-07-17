@@ -63,7 +63,8 @@ class PointInput(QWidget):
         row.addWidget(y_input)
         self.layout.addLayout(row)
     
-    def setSpinBoxSize(self, spinbox):
+    @staticmethod
+    def setSpinBoxSize(spinbox):
         spinbox.setMinimumWidth(100)
         spinbox.setMaximumWidth(100)
 
@@ -89,4 +90,3 @@ class TextInput(QWidget):
 
     def inputObject(self):
         return self.input_obj
-    

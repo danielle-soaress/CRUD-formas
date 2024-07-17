@@ -17,8 +17,6 @@ class Dialog(QDialog):
 
         # creating the main layout
         self.layout = QVBoxLayout()
-        self.form_layout = QVBoxLayout()
-        self.layout.addLayout(self.form_layout)
         
         # creating a button box
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -74,6 +72,8 @@ class Dialog(QDialog):
                 data.append(widget.toPlainText())
             elif isinstance(widget, ColorPicker):
                 data.append(widget.getCurrentColor())
+            elif isinstance(widget, QComboBox):
+                data.append(widget.currentText())
         return data
 
 
@@ -82,16 +82,17 @@ class Dialog(QDialog):
         pass
     
     def createEntityForm(self, n_points, circle = False):
+        self.form_layout = QVBoxLayout()
         # shape name input
         input_name = TextInput('Shape name: ', self)
         self._input_widgets.append(input_name.inputObject())
-        print(self._input_widgets)
-
+        
         if circle:
             # radius input
             row = QHBoxLayout()
             row.addWidget(QLabel("Radius: "))
             radius_input = QSpinBox(self)
+            radius_input.setMaximum(10)
             row.addWidget(radius_input)
             self.form_layout.addLayout(row)
             
@@ -103,6 +104,7 @@ class Dialog(QDialog):
             for i in range (0, n_points):
                 point = PointInput(f'Point: ', self, self.form_layout)
                 self._input_widgets.append(point)
+        self.layout.addLayout(self.form_layout)
         
         # color picker input
         color_picker = ColorPicker()

@@ -48,11 +48,8 @@ class FigureInfoDialog(QDialog):
         self.reject()
 
 class AllFiguresInformation(Dialog):
-    def __init__(self,  ui, title):
-        super().__init__(ui,title)
-        self.setGeometry(300,300,300,400)
-        self.centralize()
-        
+    def __init__(self,  ui, title, geometry = [300,300,300,400]):
+        super().__init__(ui,title, geometry)
         self.shapes = ui.getCartesianPlane().getEntities()
         self.item_info = {}
 
@@ -143,10 +140,8 @@ class AllFiguresInformation(Dialog):
         self.accept()
 
 class DeleteEntities(Dialog):
-    def __init__(self,  ui, title):
-        super().__init__(ui,title)
-        self.setGeometry(100,100,200,100)
-        self.centralize()
+    def __init__(self,  ui, title, geometry = [100,100,200,100]):
+        super().__init__(ui,title, geometry)
         # creating the main layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
@@ -186,3 +181,24 @@ class DeleteEntities(Dialog):
             self._ui.getCartesianPlane().reset()
             self._ui.update()
             self.accept()
+
+class OperationResult(Dialog):
+    def __init__(self,  ui, operationResultText, title = 'Operation Result', geometry = [300,300,100,100]):
+        super().__init__(ui,title, geometry)
+        self.__op_result_text = operationResultText
+        self.centralize()
+        # creating the main layout
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.defineMainLayout()
+        
+
+    def open(self):
+        if self.exec_() == QDialog.Accepted:
+            self._ui.update()
+
+    def defineMainLayout(self):
+        label1 = QLabel(self.__op_result_text)
+        row = QHBoxLayout()
+        row.addWidget(label1)
+        self.layout.addLayout(row)

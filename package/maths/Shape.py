@@ -1,16 +1,22 @@
 from abc import abstractmethod
 from package.maths.GeometricEntity import GeometricEntity
+from package.exceptions.Exceptions import *
 
 class Shape(GeometricEntity):
 
 	def __init__(self, name, points, fillColor):
-		super().__init__(name, fillColor)
-		self._points = points
-		
-		if not self.ArePointsDifferent():
-			return None
-		
-		self.sortPoints()
+		try:
+			super().__init__(name, fillColor)
+			self._points = points
+			
+			if not self.ArePointsDifferent():
+				raise InvalidAction("The points must be different.")
+			
+			self.sortPoints()
+		except InvalidAction as e:
+			raise
+		except InvalidName as e:
+			raise
 
 # some getters and setters
 

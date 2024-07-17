@@ -2,18 +2,23 @@ import math
 import textwrap
 from package.maths.Point import Point
 from package.maths.GeometricEntity import GeometricEntity
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 
 # in this file, there are two classes: Line and SegmentLine
 # a line is infinite, while a line segment is finite and has a length.
 
 class Line(GeometricEntity):
     def __init__(self, name, p1, p2, fillColor = '#000'):
-        super().__init__(name, fillColor) # in a line, 'fillColor' is the fill of line points
-        self._points = [p1, p2]
-        
-        if not self.isLine():
-            raise InvalidAction("Invalid Line. Certify if the numbers are integers.")
+        try:
+            super().__init__(name, fillColor) # in a line, 'fillColor' is the fill of line points
+            self._points = [p1, p2]
+            
+            if not self.isLine():
+                raise InvalidAction("Invalid Line. Certify if the numbers are integers.")
+        except InvalidAction as e:
+            raise
+        except InvalidName as e:
+            raise
 
     # getters and setters
 
