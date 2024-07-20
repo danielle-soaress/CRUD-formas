@@ -51,17 +51,17 @@ class Rectangle(Shape):
         '''
         )  
 
-class Triangule(Shape):
+class Triangle(Shape):
     def __init__(self, name, point1, point2, point3, fillColor):
         super().__init__(name, [point1, point2, point3], fillColor)
-        if not self.isATriangule():
-            raise InvalidAction("The points did not form a triangule.")
+        if not self.isATriangle():
+            raise InvalidAction("The points did not form a Triangle.")
     
-    def isATriangule(self): 
+    def isATriangle(self): 
         # the points can't be collinear. For check this, we can use the same formula
         # used to calculate the area.
-        triangule_area = self.area()
-        return triangule_area > 0
+        Triangle_area = self.area()
+        return Triangle_area > 0
     
     def sides(self):
         p1, p2, p3 = self._points[0], self._points[1], self._points[2]
@@ -72,10 +72,10 @@ class Triangule(Shape):
     
     def area(self):
         p1, p2, p3 = self._points[0], self._points[1], self._points[2]
-        triangule_area = 0.5 * abs(p1.getCoordX()*(p2.getCoordY() - p3.getCoordY()) + #determinant formula for area
+        Triangle_area = 0.5 * abs(p1.getCoordX()*(p2.getCoordY() - p3.getCoordY()) + #determinant formula for area
                                    p2.getCoordX()*(p3.getCoordY() - p1.getCoordY()) +
                                    p3.getCoordX()*(p1.getCoordY() - p2.getCoordY()))
-        return triangule_area
+        return Triangle_area
     
     def perimeter(self):
         side1, side2, side3 = self.sides()

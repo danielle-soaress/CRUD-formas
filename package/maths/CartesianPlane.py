@@ -40,8 +40,11 @@ class CartesianPlane():
         self.__entities = []
 
     def addEntity(self, entity):
-        if self.canAddEntity(entity):
-            self.__entities.append(entity)
+        try:
+            if self.canAddEntity(entity):
+                self.__entities.append(entity)
+        except InvalidAction as e:
+            print(e.message)
 
     def deleteEntity(self, shape_name):
         for entity in self.__entities:
@@ -56,14 +59,13 @@ class CartesianPlane():
                 if isinstance(entity, Shape) and isinstance(figure, Shape):
                     entity_points = list(map(lambda p: ({p.getCoordX()},{p.getCoordY()}), entity.getPoints()))
                     figure_points = list(map(lambda p: ({p.getCoordX()},{p.getCoordY()}), figure.getPoints()))
-
                     if isinstance(figure, Rectangle) and isinstance(entity, Rectangle) and figure_points == entity_points:
                         raise InvalidAction("The Rectangle you're trying to create already exists.")
-                    if isinstance(figure, Triangule) and isinstance(entity, Triangule)and figure_points == entity_points:
+                    if isinstance(figure, Triangle) and isinstance(entity, Triangle)and figure_points == entity_points:
                         raise InvalidAction("The Rectangle you're trying to create already exists.")
                     if isinstance(figure, Circle) and isinstance(entity, Circle) and figure_points == entity_points:
-                        raise InvalidAction("The Rectangle you're trying to create already exists.")
-                if isinstance(entity, Point) and isinstance(figure, Point) and entity.getPoint() == figure.getPoint():
+                        raise InvalidAction("The Rectangle you're trying to create already exists.")                
+                    if isinstance(entity, Point) and isinstance(figure, Point) and entity.getPoint() == figure.getPoint():
                         raise InvalidAction("The Rectangle you're trying to create already exists.")
                 if isinstance(entity, Line) and isinstance(figure, Line):
                         p1, p2 = list(map(lambda p: p.getPoint(), figure.getPoints()))

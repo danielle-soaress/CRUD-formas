@@ -4,10 +4,11 @@ from package.UI.dialogues.Dialog import Dialog
 from package.UI.components.MessageBox import MessageBox
 from package.UI.components.Inputs import PointInput
 from package.maths.Point import Point
+from package.maths.Line import Line
 from package.exceptions.Exceptions import *
 
 class PointActionsDialog(Dialog):
-    def __init__(self, ui, title = 'Distance Between Two Points', geometry = [300,300,300,150]):
+    def __init__(self, ui, title, geometry = [300,300,300,150]):
         super().__init__(ui, title, geometry)
         self.__cartesianPlane = self._ui.getCartesianPlane()
         
@@ -39,17 +40,77 @@ class PointActionsDialog(Dialog):
         return True
     
     def defineMainLayout(self):
-        self.form_layout = QVBoxLayout()
-        # Criação de widgets para a opção "Escrever nome dos pontos"
         options = self.__cartesianPlane.getAllClassEntities(Point)
         options = list(map(lambda x: x.getName(), options))
-        for i in range (0,2):
-            label = QLabel(f"Ponto {i+1}: ")
-            comboBox = QComboBox(self)
-            comboBox.addItems(options)
 
-            self.form_layout.addWidget(label)
-            self.form_layout.addWidget(comboBox)
-            self._input_widgets.append(comboBox)
+        self.comboBoxForm(options, 2)
+
+class LineActionsDialog(Dialog):
+    def __init__(self, ui, title, geometry = [300,300,300,150]):
+        super().__init__(ui, title, geometry)
+        self.__cartesianPlane = self._ui.getCartesianPlane()
         
-        self.layout.addLayout(self.form_layout)
+        if len(self.__cartesianPlane.getAllClassEntities(Line)) < 2:
+            MessageBox(self).showMessage('Error!', "There are not enough lines on the Cartesian plane to perform this operation.", "Please create more lines and try again.")
+            QTimer.singleShot(0, self.reject)
+
+        self.defineMainLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(self.button_box)
+
+
+    def AreInputsValid(self):
+        try:
+            super().AreInputsValid()
+
+            data = self.getData()
+
+            if data[0] == data[1]:
+                raise InvalidAction("You can't select the same line.")
+
+        except InvalidAction as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        
+        return True
+    
+    def defineMainLayout(self):
+        options = self.__cartesianPlane.getAllClassEntities(Line)
+        options = list(map(lambda x: x.getName(), options))
+
+        self.comboBoxForm(options, 2)
+
+class ShapesActionsDialog(Dialog):
+    def __init__(self, ui, title, shapeClass, geometry = [300,300,250,100]):
+        super().__init__(ui, title, geometry)
+        self.__cartesianPlane = self._ui.getCartesianPlane()
+        self.__ShapeClass = shapeClass
+        if len(self.__cartesianPlane.getAllClassEntities(shapeClass)) == 0:
+            MessageBox(self).showMessage('Error!', "There are not enough entities on the Cartesian plane to perform this operation.", "Please create more entities and try again.")
+            QTimer.singleShot(0, self.reject)
+
+        self.defineMainLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(self.button_box)
+
+    def AreInputsValid(self):
+        try:
+            super().AreInputsValid()
+
+        except InvalidAction as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        
+        return True
+    
+    def defineMainLayout(self):
+        options = self.__cartesianPlane.getAllClassEntities(self.__ShapeClass)
+        options = list(map(lambda x: x.getName(), options))
+
+        self.comboBoxForm(options, 1, True, 'Select the shape: ')

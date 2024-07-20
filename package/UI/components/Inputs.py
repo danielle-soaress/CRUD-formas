@@ -4,7 +4,7 @@ from PyQt5.QtGui import QColor, QPixmap
 class ColorPicker(QWidget):
 
     def __init__(self):
-        self.__color = '#0000FF'
+        self.__color = QColor('#0000FF')
     
     def setCurrentColor(self, color):
         self.__color = color

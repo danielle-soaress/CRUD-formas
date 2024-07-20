@@ -1,55 +1,87 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget, QDialogButtonBox, QLineEdit
 from PyQt5.QtCore import Qt
 from package.UI.dialogues.Dialog import Dialog
 from package.UI.components.MessageBox import MessageBox
+from package.exceptions.Exceptions import *
 
 class FigureInfoDialog(QDialog):
-    def __init__(self, figure, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Figure Info")
+    def __init__(self, figure, ui=None):
+        super().__init__(ui)
+        self.setWindowTitle("Entity Info")
+        self.__ui = ui
         self.__figure = figure
-        self.__cartesianPlane = parent.getCartesianPlane()
+        self.__cartesianPlane = ui.getCartesianPlane()
 
         layout = QVBoxLayout(self)
 
-        # Adicione os campos de informações da figura aqui
         self.infoLabel = QLabel(figure.model(), self)
         layout.addWidget(self.infoLabel)
 
-        # Layout para os botões "Edit" e "Delete Figure"
         button_layout = QHBoxLayout()
 
         edit_button = QPushButton("Edit", self)
         edit_button.clicked.connect(self.editFigure)
         button_layout.addWidget(edit_button)
 
-        delete_button = QPushButton("Delete Figure", self)
+        delete_button = QPushButton("Delete Entity", self)
         delete_button.clicked.connect(self.deleteFigure)
         button_layout.addWidget(delete_button)
 
         layout.addLayout(button_layout)
 
-        # Botão "Save"
-        save_button = QPushButton("Save", self)
-        save_button.clicked.connect(self.saveInfo)
-        layout.addWidget(save_button)
-
-    def saveInfo(self):
-        # Salvar as informações editadas da figura
-        self.__figure.setName(self.nameField.text())
-        self.accept()
+        return_button = QPushButton("Save", self)
+        return_button.clicked.connect(self.accept)
+        layout.addWidget(return_button)
 
     def editFigure(self):
-        # Implemente a lógica para editar a figura (se necessário)
-        pass
+        dialog = EditFigureDialog(self.__ui)
+        if dialog.exec_() == QDialog.Accepted:
+            data = dialog.getData()
+            self.__figure.setName(data[0])
+            self.__figure.setFillColor(data[1])
 
     def deleteFigure(self):
         self.__cartesianPlane.deleteEntity(self.__figure.getName())
         self.reject()
 
-class AllFiguresInformation(Dialog):
-    def __init__(self,  ui, title, geometry = [300,300,300,400]):
-        super().__init__(ui,title, geometry)
+class EditFigureDialog(Dialog):
+    def __init__(self, ui, title = "Edit Entity", geometry = [300,300,200,150]):
+        super().__init__(ui, title, geometry)
+        self.defineMainLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(self.button_box)
+    
+    def AreInputsValid(self):
+        try:
+            super().AreInputsValid()
+
+            data = self.getData()
+
+            figuresName= self._ui.getCartesianPlane().getEntities()
+            figuresName = list(map(lambda x: x.getName(), figuresName))
+
+            if data[0] in figuresName:
+                raise InvalidName('An entity with that name already exists.')
+        except InvalidAction as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
+            return False
+        
+        return True
+
+    def defineMainLayout(self):
+        MessageBox(self).showMessage("Alert!", "You can only edit the name and fill color.", "After editing a figure, you will see the result when you click the save button.")
+        self.createEntityForm(0)
+
+class AllFiguresInformation(QDialog):
+    def __init__(self, ui, title, geometry=[300, 300, 300, 400]):
+        super().__init__()
+        self._ui = ui
+        self.setWindowTitle(title)
+        self.setGeometry(*geometry)
+
         self.shapes = ui.getCartesianPlane().getEntities()
         self.item_info = {}
 
@@ -58,10 +90,11 @@ class AllFiguresInformation(Dialog):
         
         # creating the main layout
         self.layout = QVBoxLayout()
-        self.stacked_layout = QStackedLayout()
-        self.list_page = QWidget() # list of shapes page
-        self.info_page = QWidget() # page of selected shape info
         self.setLayout(self.layout)
+        
+        self.stacked_layout = QStackedLayout()
+        self.list_page = QWidget()  # list of shapes page
+        self.info_page = QWidget()  # page of selected shape info
         self.defineMainLayout()
 
     def open(self):
@@ -69,23 +102,19 @@ class AllFiguresInformation(Dialog):
             self._ui.update()
 
     def defineMainLayout(self):
-        # to creat the stacked layout
-        self.stacked_layout = QStackedLayout()
-
         # list of shapes page
         list_layout = QVBoxLayout()
         list_widget = QListWidget()
-        
-        shapes_name = []
-        for shape in self.shapes:
-            shapes_name.append(shape.getName())
 
+        shapes_name = [shape.getName() for shape in self.shapes]
         list_widget.addItems(shapes_name)
         list_widget.itemClicked.connect(self.displayItemInfo)
         list_layout.addWidget(list_widget)
-        self.list_page.setLayout(list_layout)
         
-        self.emptyListChecker() # show the advise "insert a shape" if the list is empty 
+        if not self.list_page.layout():  # Only set layout if it doesn't already have one
+            self.list_page.setLayout(list_layout)
+
+        self.emptyListChecker()  # show the advice "insert a shape" if the list is empty 
 
         self.stacked_layout.addWidget(self.list_page)
         self.stacked_layout.addWidget(self.info_page)
@@ -95,7 +124,11 @@ class AllFiguresInformation(Dialog):
         self.stacked_layout.setCurrentWidget(self.list_page)
 
     def displayItemInfo(self, item):
-         # selected shape info page
+        # selected shape info page
+        if self.info_page.layout():  # Remove existing layout if there is one
+            old_layout = self.info_page.layout()
+            QWidget().setLayout(old_layout)
+        
         info_layout = QVBoxLayout()
         
         back_button = QPushButton('Return')
@@ -106,23 +139,33 @@ class AllFiguresInformation(Dialog):
         self.info_label.setAlignment(Qt.AlignCenter)
 
         item_text = item.text()
-
         shape_info = self.item_info.get(item_text, 'Informações não disponíveis.')
         self.info_label.setText(shape_info)
+        
         button_row = QHBoxLayout()
         button1 = QPushButton('Delete')
         button1.clicked.connect(lambda: self.deleteShapeAction(item_text))
         button2 = QPushButton('Edit')
+        button2.clicked.connect(lambda: self.editFigure(item_text))
         button_row.addWidget(button1)
         button_row.addWidget(button2)
 
         info_layout.addWidget(back_button)
         info_layout.addWidget(self.info_label)
-        self.info_page.setLayout(info_layout)
         info_layout.addLayout(button_row)
-
         
+        self.info_page.setLayout(info_layout)
         self.stacked_layout.setCurrentWidget(self.info_page)
+
+    def editFigure(self, item):
+        dialog = EditFigureDialog(self._ui)
+        if dialog.exec_() == QDialog.Accepted:
+            entity = self._ui.getCartesianPlane().getAEntitieByName(item)
+            data = dialog.getData()
+            entity.setName(data[0])
+            entity.setFillColor(data[1])
+        
+        self.reject
 
     def showMainMenu(self):
         # Mostrar a página da lista
@@ -131,14 +174,14 @@ class AllFiguresInformation(Dialog):
     def emptyListChecker(self):
         if not self.item_info:
             self.empty_label = QLabel('Insert a shape to see it information here ;)')
-            self.layout.addWidget(self.empty_label)
             self.empty_label.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(self.empty_label)
     
     def deleteShapeAction(self, item):
         self._ui.getCartesianPlane().deleteEntity(item)
         self._ui.update()
         self.accept()
-
+        
 class DeleteEntities(Dialog):
     def __init__(self,  ui, title, geometry = [100,100,200,100]):
         super().__init__(ui,title, geometry)

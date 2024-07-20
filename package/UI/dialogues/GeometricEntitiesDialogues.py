@@ -5,7 +5,6 @@ from package.maths.Shapes import *
 from package.exceptions.Exceptions import *
 from package.UI.components.MessageBox import MessageBox
 from package.UI.components.Inputs import *
-from PyQt5.QtWidgets import QFormLayout
 
 
 class RectangleDialog(Dialog):
@@ -19,15 +18,12 @@ class RectangleDialog(Dialog):
     def AreInputsValid(self):
         try:
             super().AreInputsValid()
-
-            points = self.getData()[1:5]
-            
-
-            rect = Rectangle('rect', 
-                    Point('Point 1', points[0][0], points[0][1]), 
-                    Point('Point 2', points[1][0], points[1][1]), 
-                    Point('Point 3', points[2][0], points[2][1]), 
-                    Point('Point 4', points[3][0], points[3][1]), 
+            data = self.getData()
+            rect = Rectangle(data[0], 
+                    Point('Point 1', data[1][0], data[1][1]), 
+                    Point('Point 2', data[2][0], data[2][1]), 
+                    Point('Point 3', data[3][0], data[3][1]), 
+                    Point('Point 4', data[4][0], data[4][1]), 
                     '#000')
             
             self._ui.getCartesianPlane().canAddEntity(rect) # to verify if this shape already exists in the plane
@@ -44,9 +40,9 @@ class RectangleDialog(Dialog):
         self.createEntityForm(4)
     
 
-class TrianguleDialog(Dialog):
+class TriangleDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Triangule information")
+        super().__init__(ui, "Insert Triangle information")
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -58,15 +54,15 @@ class TrianguleDialog(Dialog):
         try:
             super().AreInputsValid()
 
-            points = self.getData()[1:4]
+            data = self.getData()
 
-            triangule = Triangule('triangule', 
-                    Point('Point 1', points[0][0], points[0][1]), 
-                    Point('Point 2', points[1][0], points[1][1]), 
-                    Point('Point 3', points[2][0], points[2][1]), 
+            triangle = Triangle(data[0], 
+                    Point('Point 1', data[1][0], data[1][1]), 
+                    Point('Point 2', data[2][0], data[2][1]), 
+                    Point('Point 3', data[3][0], data[3][1]), 
                     '#000')
             
-            self._ui.getCartesianPlane().canAddEntity(triangule) # to verify if this shape already exists in the plane
+            self._ui.getCartesianPlane().canAddEntity(triangle) # to verify if this shape already exists in the plane
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
             return False
@@ -90,11 +86,11 @@ class CircleDialog(Dialog):
         try:
             super().AreInputsValid()
 
-            points = self.getData()[1:3]
+            data = self.getData()
 
-            circle = Circle('circle', 
-                    Point('Point 1', points[0][0], points[0][1]), 
-                    points[1],
+            circle = Circle(data[0], 
+                    Point('Point 1', data[1][0], data[1][1]), 
+                    data[2],
                     '#000')
             
             self._ui.getCartesianPlane().canAddEntity(circle) # to verify if this shape already exists in the plane
@@ -123,15 +119,13 @@ class PointDialog(Dialog):
 
             data = self.getData()
 
-            p = Point('p1', data[1][0], data[1][1], '#000')
+            p = Point(data[0], data[1][0], data[1][1], '#000')
             
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
-        except InvalidAction as e:
-            MessageBox(self).showMessage('Error!', e.message)
-            return False
+        except InvalidAction as b:
+            MessageBox(self).showMessage('Error!', b.message)
         except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
-            return False
         
         return True
 
@@ -154,7 +148,8 @@ class LineSegmentDialog(Dialog):
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
-            return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
         
         return True
 
@@ -170,7 +165,6 @@ class LineDialog(Dialog):
         
 
     def AreInputsValid(self):
-    
         try:
             super().AreInputsValid()
             
@@ -181,7 +175,8 @@ class LineDialog(Dialog):
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
-            return False
+        except InvalidName as e:
+            MessageBox(self).showMessage('Error!', e.message)
         
         return True
 

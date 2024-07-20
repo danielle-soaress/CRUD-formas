@@ -71,11 +71,10 @@ class Dialog(QDialog):
             elif isinstance(widget, QTextEdit):
                 data.append(widget.toPlainText())
             elif isinstance(widget, ColorPicker):
-                data.append(widget.getCurrentColor())
+                data.append(widget.getCurrentColor().name())
             elif isinstance(widget, QComboBox):
                 data.append(widget.currentText())
         return data
-
 
     @abstractmethod
     def defineMainLayout(self):
@@ -130,6 +129,22 @@ class Dialog(QDialog):
         self.layout.addWidget(self.stackedWidget)
 
         self.setLayout(self.layout)
+
+    def comboBoxForm(self, options, quantity, labelInfo = False, labelText = None):
+        self.form_layout = QVBoxLayout()
+        for i in range (0,quantity):
+            if labelInfo:
+                label = QLabel(labelText)
+            else:
+                label = QLabel(f"Point {i+1}: ")
+            comboBox = QComboBox(self)
+            comboBox.addItems(options)
+
+            self.form_layout.addWidget(label)
+            self.form_layout.addWidget(comboBox)
+            self._input_widgets.append(comboBox)
+        
+        self.layout.addLayout(self.form_layout)
 
     def onSelectionChange(self, index):
         # Alternar o QStackedWidget para exibir o formulário apropriado

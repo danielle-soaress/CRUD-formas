@@ -72,14 +72,14 @@ class UI(QMainWindow):
                     painter.drawRect(rect)
 
                     text_position = rect.topRight() + QPointF(10, -10)
-                elif isinstance(figure, Triangule):
-                    triangule = QPolygon([
+                elif isinstance(figure, Triangle):
+                    triangle = QPolygon([
                         QPoint(self.convertValue(figure.getAPoint(0).getCoordX()), self.height() - self.convertValue(figure.getAPoint(0).getCoordY())),
                         QPoint(self.convertValue(figure.getAPoint(1).getCoordX()), self.height() - self.convertValue(figure.getAPoint(1).getCoordY())),
                         QPoint(self.convertValue(figure.getAPoint(2).getCoordX()), self.height() - self.convertValue(figure.getAPoint(2).getCoordY()))
                     ])
-                    painter.drawPolygon(triangule)
-                    text_position = triangule.boundingRect().topRight() + QPointF(5, -5)
+                    painter.drawPolygon(triangle)
+                    text_position = triangle.boundingRect().topRight() + QPointF(5, -5)
                 elif isinstance(figure, Circle):
                     radius = 20*figure.getRadius()
                     painter.drawEllipse(self.convertValue(figure.getAPoint(0).getCoordX()) - radius, self.height() - radius - self.convertValue(figure.getAPoint(0).getCoordY()), 2*radius, 2*radius)
