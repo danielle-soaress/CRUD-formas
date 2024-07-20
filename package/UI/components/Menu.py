@@ -5,7 +5,7 @@ from package.maths.Shapes import *
 from package.maths.Line import *
 from package.maths.Point import Point
 from package.UI.dialogues.InformativeDialogues import *
-from package.UI.dialogues.PointFunctionsDialogues import *
+from package.UI.dialogues.ActionsDialog import *
 
 class Menu():
     def __init__(self, UI):
@@ -116,7 +116,7 @@ class Menu():
 
         pMenu.addAction(createPoint)
 
-        # relation between 2 points
+        # distance: relation between 2 points
         distanceBetween = QAction('&Distance Between Two Points', self.__ui)
         distanceBetween.setShortcut('')
         distanceBetween.triggered.connect(lambda: None)
@@ -124,13 +124,20 @@ class Menu():
 
         pMenu.addAction(distanceBetween)
 
-        # relation between 2 points
+        # median: relation between 2 points
         medianBetween = QAction('&Median Between Two Points', self.__ui)
         medianBetween.setShortcut('')
         medianBetween.triggered.connect(lambda: None)
         medianBetween.triggered.connect(lambda: self.entitiesActions('medianBetween', "Median Between Two Points", Point))
 
         pMenu.addAction(medianBetween)
+
+        # check point proximity to a line   
+        checkLineProximity = QAction('&Check Point Proximity to Line', self.__ui)
+        checkLineProximity.setShortcut('')
+        checkLineProximity.triggered.connect(lambda: self.entitiesRelationship('lineProximity', "Check Point Proximity to Line", Point, Line))
+        pMenu.addAction(checkLineProximity)
+
     
     def lineMenu(self):
         lineMenu = self.__menubar.addMenu('&Line')
@@ -158,17 +165,19 @@ class Menu():
     def EntitiesMenu(self):
         entitiesMenu = self.__menubar.addMenu('&All Entities')
 
-        # to create a Triangle   
+        # to manage all entities
         manageEntities = QAction('&Manage Entities', self.__ui)
         manageEntities.setShortcut('Alt+0')
         manageEntities.triggered.connect(lambda: AllFiguresInformation(self.__ui, "Manage Entities").open())
         entitiesMenu.addAction(manageEntities)
 
-        # to create a Triangle   
+        # to delete all entities   
         deleteEntities = QAction('&Delete All Entities', self.__ui)
-        deleteEntities.setShortcut('Alt+D')
+        deleteEntities.setShortcut('')
         deleteEntities.triggered.connect(lambda: DeleteEntities(self.__ui, "Delete All Entities").open())
         entitiesMenu.addAction(deleteEntities)
+
+        
 
     def drawEntity(self, type):
         if type == 'rect':
@@ -231,12 +240,11 @@ class Menu():
                 if action == "distanceBetween" or action == "medianBetween":
                     p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
                     p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
-                    result = p1.distanceTo(p2) if action == "distanceBetween" else p1.medianBetween(p2)
+                    result = Point.distanceTo(p1, p2) if action == "distanceBetween" else p1.medianBetween(p2)
 
                     OperationResult(self.__ui, 
                                     f'The result of "{actionName}" operation is: <b>{result:2f}</b>'
-                                    ).open()
-                    
+                                    ).open()          
         elif specificEntity == Line or specificEntity == LineSegment:
             dialog = LineActionsDialog(self.__ui, actionName)
             if dialog.exec_() == QDialog.Accepted:
@@ -282,3 +290,19 @@ class Menu():
                 OperationResult(self.__ui, 
                                 f'The result of your operation is:<br>{textResult}<br><br>For decimal numeric values, the result is only approximate.'
                                 ).open()
+
+    def entitiesRelationship(self, action, actionName, entity1, entity2):
+        dialog = EntitiesRelationship(self.__ui, actionName, entity1, entity2)
+        if dialog.exec_() == QDialog.Accepted:
+            data = dialog.getData()
+
+            point = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+            line = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+            result = None
+
+            if action == "lineProximity":
+                result = Point.lineSegmentProximity(point, line)
+
+            OperationResult(self.__ui, 
+                            f'The result of "{actionName}" operation is: <b>{result}</b>'
+                            ).open()   

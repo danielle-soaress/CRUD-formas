@@ -124,8 +124,10 @@ class PointDialog(Dialog):
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as b:
             MessageBox(self).showMessage('Error!', b.message)
+            return False
         except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
+            return False
         
         return True
 
@@ -148,8 +150,10 @@ class LineSegmentDialog(Dialog):
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
+            return False
         except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
+            return False
         
         return True
 
@@ -175,8 +179,10 @@ class LineDialog(Dialog):
             self._ui.getCartesianPlane().canAddEntity(p) # to verify if this shape already exists in the plane
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
+            return False
         except InvalidName as e:
             MessageBox(self).showMessage('Error!', e.message)
+            return False
         
         return True
 

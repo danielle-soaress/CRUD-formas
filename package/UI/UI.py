@@ -87,7 +87,7 @@ class UI(QMainWindow):
             elif isinstance(figure, Point):
                 point = QPoint(self.convertValue(figure.getCoordX()), self.height() - self.convertValue((figure.getCoordY())))
                 painter.drawEllipse(point, 4, 4)
-                text_position = point + QPointF(-25, -20)
+                text_position = point + QPointF(15, -20)
             elif isinstance(figure, LineSegment):
                 point1 = QPointF(self.convertValue(figure.getPoint1().getCoordX()), self.height() - self.convertValue(figure.getPoint1().getCoordY()))
                 point2 = QPointF(self.convertValue(figure.getPoint2().getCoordX()), self.height() - self.convertValue(figure.getPoint2().getCoordY()))

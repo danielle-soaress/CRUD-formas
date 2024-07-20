@@ -41,7 +41,6 @@ class Shape(GeometricEntity):
 	@abstractmethod
 	def model(self):
 		pass
-	
 # points methods: as each shape has many points (3 or more), each one must be responsible for deal with their set of point, 
 # such as organizinge them, define how they will interact and the rules they must follow.
 	

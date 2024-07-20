@@ -2,6 +2,7 @@ import math
 import textwrap
 
 from package.maths.Shape import Shape
+from package.maths.Point import Point
 from itertools import combinations
 from package.exceptions.Exceptions import *
 
@@ -19,7 +20,7 @@ class Rectangle(Shape):
 
     def isARect(self):
         # calculate all distances of points from each other
-        distances = [p1.distanceTo(p2) for p1, p2 in combinations(self._points, 2)]
+        distances = [Point.distanceTo(p1,p2) for p1, p2 in combinations(self._points, 2)]
         distances.sort()
 
         # a rectangle should have 4 equal shorter sides (2 pairs of sides) and 2 equal longer sides (diagonals)
@@ -49,7 +50,7 @@ class Rectangle(Shape):
         Area: {self.area():.2f}
         Perimeter: {self.perimeter():.2f}
         '''
-        )  
+        ) 
 
 class Triangle(Shape):
     def __init__(self, name, point1, point2, point3, fillColor):
@@ -165,4 +166,13 @@ class Circle(Shape):
         Perimeter: {self.perimeter():.2f}
         '''
         )
+    
+    def info(self):
+        return {
+            "Type": self.__class__.__name__,
+            "Name": self._name,
+            "Fill Color": self._fillColor,
+            "Points": f'{list(map(lambda x: x.getPoint(), self.getPoints()))}',
+            "Radius": self.__radius
+        }
     

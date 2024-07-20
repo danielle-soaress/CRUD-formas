@@ -76,12 +76,13 @@ class PointInput(QWidget):
 
 class TextInput(QWidget):
 
-    def __init__(self, text_label, parent = None):
+    def __init__(self, text_label, parent = None, placeholder = ''):
         super().__init__(parent)
-        self.parent = parent
+        self.parent = parent    
 
         self.input_desc = QLabel(text_label)
         self.input_obj = QLineEdit(parent)
+        self.input_obj.setPlaceholderText(placeholder)
         self.input_obj.setMaxLength(10)
         row = QHBoxLayout()
         row.addWidget(self.input_desc)

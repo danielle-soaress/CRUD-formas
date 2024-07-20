@@ -146,6 +146,26 @@ class Dialog(QDialog):
         
         self.layout.addLayout(self.form_layout)
 
+    def comboBoxForm2(self, option1, option2, labelsText):
+        self.form_layout = QVBoxLayout()
+            
+        label1 = QLabel(labelsText[0])
+        comboBox1 = QComboBox(self)
+        comboBox1.addItems(option1)
+        self.form_layout.addWidget(label1)
+        self.form_layout.addWidget(comboBox1)
+        self._input_widgets.append(comboBox1)
+
+        label2 = QLabel(labelsText[1])
+        comboBox2 = QComboBox(self)
+        comboBox2.addItems(option2)
+        self.form_layout.addWidget(label2)
+        self.form_layout.addWidget(comboBox2)
+        self._input_widgets.append(comboBox2)
+
+        self.layout.addLayout(self.form_layout)
+
+
     def onSelectionChange(self, index):
         # Alternar o QStackedWidget para exibir o formulário apropriado
         self.stackedWidget.setCurrentIndex(index) 

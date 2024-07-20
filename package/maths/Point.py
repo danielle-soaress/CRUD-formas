@@ -12,7 +12,6 @@ class Point(GeometricEntity):
         if not self.isAPoint():
             raise InvalidAction("Invalid point. Certify if the numbers are integers.")
 
-
     def getCoordX(self):
         return self.__coordX   
 
@@ -44,27 +43,36 @@ class Point(GeometricEntity):
     def sort2Points(self, other):
         x1, y1 = self.__coordX, self.__coordY
         x2, y2 = other.getCoordX(), other.getCoordY()
-    
-        # Comparação das coordenadas x
+        # compare the x coords
         if x1 < x2:
             return self, other
         elif x1 > x2:
             return other, self
+            # if x coords are equal, compare the y coords
         else:
-            # Se as coordenadas x são iguais, comparar as coordenadas y
             if y1 < y2:
                 return self, other
             else:
                 return other, self
 
-    def distanceTo(self, other):
-        return math.sqrt((self.__coordX - other.getCoordX()) ** 2 + (self.__coordY - other.getCoordY()) ** 2)
+    @staticmethod
+    def distanceTo(p1, p2):
+        return math.sqrt((p1.getCoordX() - p2.getCoordX()) ** 2 + (p1.getCoordY() - p2.getCoordY()) ** 2)
     
+    @staticmethod
+    def lineSegmentProximity(p1, line):
+        p2,p3 = line.getPoints()
+        d1_2 = Point.distanceTo(p1, p2)
+        d1 = Point.distanceTo(p1, p3)
+        d2 = Point.distanceTo(p2, p3)
+        d1_2_3 = d1 + d2
+        print('foi')
+        return d1_2_3 <= 1.1 * d1_2
+
     def medianBetween(self, other):
         mx = (self.__coordX + other.getCoordX()) / 2
         my = (self.__coordY + other.getCoordY()) / 2
         return (mx, my)
-    
 
     # other methods
     def distanceFromOrigin(self):
@@ -73,7 +81,7 @@ class Point(GeometricEntity):
     def model(self):
         return textwrap.dedent(
         f'''
-        ------ Basic Information ------------
+        -------- Basic Information ----------
         Name: {self._name}
         Coordinates: ({self.__coordX}, {self.__coordY})
         Fill Color: {self._fillColor}
@@ -82,3 +90,10 @@ class Point(GeometricEntity):
         Distance from Origin: {self.distanceFromOrigin():.2f}
         ''')
     
+    def info(self):
+        return {
+            "Type": self.__class__.__name__,
+            "Name": self._name,
+            "Fill Color": self._fillColor,
+            "Point": (self.__coordX, self.__coordY)
+        }

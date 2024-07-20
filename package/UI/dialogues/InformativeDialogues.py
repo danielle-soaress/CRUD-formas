@@ -1,6 +1,8 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget, QDialogButtonBox, QLineEdit
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 from package.UI.dialogues.Dialog import Dialog
+from package.UI.components.Inputs import TextInput, ColorPicker
 from package.UI.components.MessageBox import MessageBox
 from package.exceptions.Exceptions import *
 
@@ -13,8 +15,9 @@ class FigureInfoDialog(QDialog):
         self.__cartesianPlane = ui.getCartesianPlane()
 
         layout = QVBoxLayout(self)
-
-        self.infoLabel = QLabel(figure.model(), self)
+        
+        info_str = "\n".join([f"<b>{key}</b>: {value}<br><br>" for key, value in figure.info().items()])
+        self.infoLabel = QLabel(info_str, self)
         layout.addWidget(self.infoLabel)
 
         button_layout = QHBoxLayout()
@@ -34,7 +37,7 @@ class FigureInfoDialog(QDialog):
         layout.addWidget(return_button)
 
     def editFigure(self):
-        dialog = EditFigureDialog(self.__ui)
+        dialog = EditFigureDialog(self.__ui, [self.__figure.getName(), self.__figure.getFillColor()])
         if dialog.exec_() == QDialog.Accepted:
             data = dialog.getData()
             self.__figure.setName(data[0])
@@ -45,8 +48,9 @@ class FigureInfoDialog(QDialog):
         self.reject()
 
 class EditFigureDialog(Dialog):
-    def __init__(self, ui, title = "Edit Entity", geometry = [300,300,200,150]):
+    def __init__(self, ui, data, title = "Edit Entity", geometry = [300,300,200,150]):
         super().__init__(ui, title, geometry)
+        self.__data = data
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -73,7 +77,20 @@ class EditFigureDialog(Dialog):
 
     def defineMainLayout(self):
         MessageBox(self).showMessage("Alert!", "You can only edit the name and fill color.", "After editing a figure, you will see the result when you click the save button.")
-        self.createEntityForm(0)
+        
+        self.form_layout = QVBoxLayout()
+        
+        # shape name input
+        input_name = TextInput('Shape name: ', self, self.__data[0])
+        self._input_widgets.append(input_name.inputObject())
+
+        self.layout.addLayout(self.form_layout)
+        
+        # color picker input
+        color_picker = ColorPicker()
+        color_picker.setCurrentColor(QColor(self.__data[1]))
+        self._input_widgets.append(color_picker)
+        color_picker.addColorPicker(self.layout, 'Shape color: ')
 
 class AllFiguresInformation(QDialog):
     def __init__(self, ui, title, geometry=[300, 300, 300, 400]):
@@ -82,11 +99,11 @@ class AllFiguresInformation(QDialog):
         self.setWindowTitle(title)
         self.setGeometry(*geometry)
 
-        self.shapes = ui.getCartesianPlane().getEntities()
+        self.__entities = ui.getCartesianPlane().getEntities()
         self.item_info = {}
 
-        for shape in self.shapes:
-            self.item_info[shape.getName()] = shape.model()
+        for entity in self.__entities:
+            self.item_info[entity.getName()] = entity.model()
         
         # creating the main layout
         self.layout = QVBoxLayout()
@@ -106,7 +123,7 @@ class AllFiguresInformation(QDialog):
         list_layout = QVBoxLayout()
         list_widget = QListWidget()
 
-        shapes_name = [shape.getName() for shape in self.shapes]
+        shapes_name = [shape.getName() for shape in self.__entities]
         list_widget.addItems(shapes_name)
         list_widget.itemClicked.connect(self.displayItemInfo)
         list_layout.addWidget(list_widget)

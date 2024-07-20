@@ -26,3 +26,11 @@ class GeometricEntity():
     @abstractmethod
     def model(self):
         pass
+
+    def info(self):
+        return {
+			"Type": self.__class__.__name__,
+            "Name": self._name,
+            "Fill Color": self._fillColor,
+            "Points": f'{list(map(lambda x: x.getPoint(), self.getPoints()))}'
+		}
