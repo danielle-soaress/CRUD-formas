@@ -1,19 +1,19 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget, QComboBox
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import QTimer
 from package.UI.dialogues.Dialog import Dialog
 from package.UI.components.MessageBox import MessageBox
-from package.UI.components.Inputs import PointInput
-from package.maths.Point import Point
 from package.maths.Line import Line
 from package.exceptions.Exceptions import *
 
-class PointActionsDialog(Dialog):
-    def __init__(self, ui, title, geometry = [300,300,300,150]):
+class EntityActionDialog(Dialog):
+    def __init__(self, ui, title, className, doubleForm = False, geometry = [300,300,300,100]):
         super().__init__(ui, title, geometry)
         self.__cartesianPlane = self._ui.getCartesianPlane()
+        self.__className = className
+        self.__doubleForm = doubleForm
         
-        if len(self.__cartesianPlane.getAllClassEntities(Point)) < 2:
-            MessageBox(self).showMessage('Error!', "There are not enough points on the Cartesian plane to perform this operation.", "Please, create more points and try again.")
+        quantityEntities = len(self.__cartesianPlane.getAllClassEntities(className))
+        if (doubleForm == True and quantityEntities <2) or (doubleForm == False and quantityEntities == 0):
+            MessageBox(self).showMessage('Error!', "There are not enough entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
             QTimer.singleShot(0, self.reject)
 
         self.defineMainLayout()
@@ -25,10 +25,10 @@ class PointActionsDialog(Dialog):
         try:
             super().AreInputsValid()
 
-            data = self.getData()
-
-            if data[0] == data[1]:
-                raise InvalidAction("You can't select the same points.")
+            if self.__doubleForm:
+                data = self.getData()
+                if data[0] == data[1]:
+                    raise InvalidAction("You can't select the same points.")
 
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
@@ -40,10 +40,10 @@ class PointActionsDialog(Dialog):
         return True
     
     def defineMainLayout(self):
-        options = self.__cartesianPlane.getAllClassEntities(Point)
+        options = self.__cartesianPlane.getAllClassEntities(self.__className)
         options = list(map(lambda x: x.getName(), options))
 
-        self.comboBoxForm(options, 2)
+        self.comboBoxForm(options, 2 if self.__doubleForm else 1, True, labelText = f'Select a {self.__className.__name__}:')
 
 class LineActionsDialog(Dialog):
     def __init__(self, ui, title, geometry = [300,300,300,150]):

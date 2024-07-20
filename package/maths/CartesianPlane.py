@@ -36,7 +36,7 @@ class CartesianPlane():
                 result.append(entity)
         return result
     
-    def reset(self): # this function its important to clean the cartesian plane (remove all entities)
+    def reset(self): # this function is important to clean the cartesian plane (remove all entities)
         self.__entities = []
 
     def addEntity(self, entity):

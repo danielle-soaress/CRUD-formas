@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit, QVBoxLayout, QDialogButtonBox, QFormLayout, QComboBox, QStackedWidget
+from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit, QVBoxLayout, QDialogButtonBox, QComboBox, QStackedWidget
 from package.UI.components.Inputs import *
 from package.exceptions.Exceptions import InvalidAction
 
@@ -83,7 +83,7 @@ class Dialog(QDialog):
     def createEntityForm(self, n_points, circle = False):
         self.form_layout = QVBoxLayout()
         # shape name input
-        input_name = TextInput('Shape name: ', self)
+        input_name = TextInput('Entity name: ', self)
         self._input_widgets.append(input_name.inputObject())
         
         if circle:
@@ -108,7 +108,7 @@ class Dialog(QDialog):
         # color picker input
         color_picker = ColorPicker()
         self._input_widgets.append(color_picker)
-        color_picker.addColorPicker(self.layout, 'Shape color: ')
+        color_picker.addColorPicker(self.layout, 'Entity color: ')
     
     def dupleForm(self, options, form1, form2):
         comboBox = QComboBox(self)

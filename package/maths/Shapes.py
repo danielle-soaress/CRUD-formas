@@ -39,7 +39,7 @@ class Rectangle(Shape):
     def model(self):
         return textwrap.dedent(
         f'''
-        ------ Basic Information -------------
+        -------- Basic Information ----------
         Name: {self._name}
         Fill Color: {self._fillColor}
         Points: {list(map(lambda x: x.getPoint(), self.getPoints()))}
@@ -107,7 +107,7 @@ class Triangle(Shape):
     def model(self):
         return textwrap.dedent(
             f'''
-            ------ Basic Information -------------
+            -------- Basic Information ----------
             Name: {self._name}
             Fill Color: {self._fillColor}
             Points: {list(map(lambda x: x.getPoint(), self.getPoints()))}
@@ -154,7 +154,7 @@ class Circle(Shape):
     def model(self):
         return textwrap.dedent(
         f'''
-        ------ Basic Information ------------
+        -------- Basic Information ----------
         Name: {self._name}
         Fill Color: {self._fillColor}
         Points: {list(map(lambda x: x.getPoint(), self.getPoints()))}

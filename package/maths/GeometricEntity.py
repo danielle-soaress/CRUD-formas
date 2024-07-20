@@ -26,7 +26,7 @@ class GeometricEntity():
     @abstractmethod
     def model(self):
         pass
-
+    
     def info(self):
         return {
 			"Type": self.__class__.__name__,

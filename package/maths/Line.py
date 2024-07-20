@@ -21,7 +21,6 @@ class Line(GeometricEntity):
             raise
 
     # getters and setters
-
     def setPoint1(self, newP1):
         self._points[0] = newP1
     
@@ -106,7 +105,7 @@ class Line(GeometricEntity):
     def model(self):
         return textwrap.dedent(
         f'''
-        ------ Basic Information ------------
+        -------- Basic Information ----------
         Name: {self._name}
         Fill Color: {self._fillColor}
         Points: {f'{self._points[0].getPoint()}, {self._points[1].getPoint()}'}
@@ -131,7 +130,7 @@ class LineSegment(Line):
     def model(self):
         return textwrap.dedent(
         f'''
-        ------ Basic Information ------------
+        -------- Basic Information ----------
         Name: {self._name}
         Fill Color: {self._fillColor}
         Points: {f'{self._points[0].getPoint()}, {self._points[1].getPoint()}'}

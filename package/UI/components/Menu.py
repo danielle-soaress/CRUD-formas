@@ -116,10 +116,16 @@ class Menu():
 
         pMenu.addAction(createPoint)
 
+        # distance from origin
+        distanceBetween = QAction('&Distance from Origin', self.__ui)
+        distanceBetween.setShortcut('')
+        distanceBetween.triggered.connect(lambda: self.entitiesActions('distanceOrigin', "Distance from Origin", Point))
+
+        pMenu.addAction(distanceBetween)
+
         # distance: relation between 2 points
         distanceBetween = QAction('&Distance Between Two Points', self.__ui)
         distanceBetween.setShortcut('')
-        distanceBetween.triggered.connect(lambda: None)
         distanceBetween.triggered.connect(lambda: self.entitiesActions('distanceBetween', "Distance Between Two Points", Point))
 
         pMenu.addAction(distanceBetween)
@@ -127,7 +133,6 @@ class Menu():
         # median: relation between 2 points
         medianBetween = QAction('&Median Between Two Points', self.__ui)
         medianBetween.setShortcut('')
-        medianBetween.triggered.connect(lambda: None)
         medianBetween.triggered.connect(lambda: self.entitiesActions('medianBetween', "Median Between Two Points", Point))
 
         pMenu.addAction(medianBetween)
@@ -137,8 +142,7 @@ class Menu():
         checkLineProximity.setShortcut('')
         checkLineProximity.triggered.connect(lambda: self.entitiesRelationship('lineProximity', "Check Point Proximity to Line", Point, Line))
         pMenu.addAction(checkLineProximity)
-
-    
+  
     def lineMenu(self):
         lineMenu = self.__menubar.addMenu('&Line')
 
@@ -154,6 +158,13 @@ class Menu():
         createLineSegment.triggered.connect(lambda: self.drawEntity('lineSegment'))
 
         lineMenu.addAction(createLineSegment)
+
+        # get line equation
+        lineEquation = QAction('&Line Equation', self.__ui)
+        lineEquation.setShortcut('')
+        lineEquation.triggered.connect(lambda: self.entitiesActions('equation', "Get Equation", Line))
+
+        lineMenu.addAction(lineEquation)
 
         # to create check if 2 lines are parallels 
         parallelLines = QAction('&Check parallelism', self.__ui)
@@ -176,8 +187,6 @@ class Menu():
         deleteEntities.setShortcut('')
         deleteEntities.triggered.connect(lambda: DeleteEntities(self.__ui, "Delete All Entities").open())
         entitiesMenu.addAction(deleteEntities)
-
-        
 
     def drawEntity(self, type):
         if type == 'rect':
@@ -232,64 +241,75 @@ class Menu():
         
         self.__ui.update()
 
-    def entitiesActions(self, action, actionName, specificEntity):
-        if specificEntity == Point:
-            dialog = PointActionsDialog(self.__ui, actionName)
-            if dialog.exec_() == QDialog.Accepted:
-                data = dialog.getData()
-                if action == "distanceBetween" or action == "medianBetween":
+    def entitiesActions(self, action, actionName, classEntity):
+        actionStatus = False
+        if classEntity == Point:
+            if action == "distanceOrigin":
+                dialog = EntityActionDialog(self.__ui, actionName, classEntity, False)
+                if dialog.exec_() == QDialog.Accepted:
+                    data = dialog.getData()
                     p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
-                    p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
-                    result = Point.distanceTo(p1, p2) if action == "distanceBetween" else p1.medianBetween(p2)
-
-                    OperationResult(self.__ui, 
-                                    f'The result of "{actionName}" operation is: <b>{result:2f}</b>'
-                                    ).open()          
-        elif specificEntity == Line or specificEntity == LineSegment:
-            dialog = LineActionsDialog(self.__ui, actionName)
-            if dialog.exec_() == QDialog.Accepted:
-                data = dialog.getData()
-                if action == "areParallel":
+                    result = f'<b>{p1.distanceFromOrigin():.2f}</b>'
+                    actionStatus = True
+            else:
+                dialog = EntityActionDialog(self.__ui, actionName, classEntity, True)
+                if dialog.exec_() == QDialog.Accepted:
+                    data = dialog.getData()
+                    if action == "distanceBetween" or action == "medianBetween":
+                        p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+                        p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+                        result = f'<b>{Point.distanceTo(p1, p2):.2f}</b>' if action == "distanceBetween" else f'<b>{p1.medianBetween(p2)}</b>'
+                        actionStatus = True
+        elif classEntity == Line or classEntity == LineSegment:
+            if action == 'equation':
+                dialog = EntityActionDialog(self.__ui, actionName, classEntity, False)
+                if dialog.exec_() == QDialog.Accepted:
+                    data = dialog.getData()
                     l1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
-                    l2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
-                    result = "Are parallel" if l1.areParallels(l2) else "Are not parallel"
-
-                    OperationResult(self.__ui, 
-                                    f'The result of "Check parallelism" operation is: <b>{result}</b>'
-                                    ).open()
+                    result = f'<br><b>{l1.equation()}</b>'
+                    actionStatus = True
+            else:
+                dialog = EntityActionDialog(self.__ui, actionName, classEntity, True)
+                if dialog.exec_() == QDialog.Accepted:
+                    data = dialog.getData()
+                    if action == "areParallel":
+                        l1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+                        l2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+                        result = "<b>Are parallel</b>" if l1.areParallels(l2) else "<b>Are not parallel</b>"
+                        actionStatus = True
         else:
-            dialog = ShapesActionsDialog(self.__ui, actionName, specificEntity)
+            dialog = ShapesActionsDialog(self.__ui, actionName, classEntity)
             
             if dialog.exec_() == QDialog.Accepted:
                 data = dialog.getData()
                 entity = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
-                textResult = f""
                 
                 if action == "areaPerimeter":
-                    result = [entity.area(), entity.perimeter()]
-                    textResult = f"Area: <b>{result[0]:.2f}</b><br>Perimeter: <b>{result[1]:.2f}</b>"
-                elif specificEntity == Rectangle and action == "widthHeight":
-                    result = [entity.width(), entity.height()]
-                    textResult = f"Width: <b>{result[0]:.2f}</b><br>Height: <b>{result[1]:.2f}</b>"
-                elif specificEntity == Circle and action =="radiusDiameter":
-                    result = [entity.getRadius(), entity.diameter()]
-                    textResult = f"Radius: <b>{result[0]:.2f}</b><br>Diameter: <b>{result[1]:.2f}</b>"
-                elif specificEntity == Triangle: 
+                    calcResult = [entity.area(), entity.perimeter()]
+                    result = f"<br>Area: <b>{calcResult[0]:.2f}</b><br>Perimeter: <b>{calcResult[1]:.2f}</b>"
+                elif classEntity == Rectangle and action == "widthHeight":
+                    calcResult = [entity.width(), entity.height()]
+                    result = f"<br>Width: <b>{calcResult[0]:.2f}</b><br>Height: <b>{calcResult[1]:.2f}</b>"
+                elif classEntity == Circle and action =="radiusDiameter":
+                    calcResult = [entity.getRadius(), entity.diameter()]
+                    result = f"<br>Radius: <b>{calcResult[0]:.2f}</b><br>Diameter: <b>{calcResult[1]:.2f}</b>"
+                elif classEntity == Triangle: 
                     if action =="anglesSides":
-                        result = [
+                        calcResult = [
                                 [round(num, 2) for num in entity.angles()],
                                 [round(num, 2) for num in entity.sides()]]
-                        textResult = f"Angles: <b>{result[0]}</b><br>Sides: <b>{result[1]}</b>"
+                        result = f"<br>Angles: <b>{calcResult[0]}</b><br>Sides: <b>{calcResult[1]}</b>"
                     elif action =="hypotenuse":
-                        result = entity.hypotenuse()
-                        textResult = f"Hipotenuse: <b>{result:.2f}</b>"
+                        calcResult = entity.hypotenuse()
+                        result = f"<br>Hipotenuse: <b>{calcResult:.2f}</b>"
                     elif action =="classify":
-                        result = entity.classify()
-                        textResult = f"Triangle Classification: <b>{result}</b>"
-
-                OperationResult(self.__ui, 
-                                f'The result of your operation is:<br>{textResult}<br><br>For decimal numeric values, the result is only approximate.'
-                                ).open()
+                        calcResult = entity.classify()
+                        result = f"<br>Triangle Classification: <b>{calcResult}</b>"
+                actionStatus = True
+        if actionStatus:
+            OperationResult(self.__ui, 
+                            f'The result of {actionName} operation is:{result}<br><br>For decimal numeric values, the result is only approximate.'
+                            ).open()
 
     def entitiesRelationship(self, action, actionName, entity1, entity2):
         dialog = EntitiesRelationship(self.__ui, actionName, entity1, entity2)
