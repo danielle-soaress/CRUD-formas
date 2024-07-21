@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import  QAction, QDialog
-from PyQt5.QtGui import QIcon
 from package.UI.dialogues.GeometricEntitiesDialogues import *
 from package.maths.Shapes import *
 from package.maths.Line import *
@@ -27,22 +26,19 @@ class Menu():
         createRectangle = QAction('&Create Rectangle', self.__ui)
         createRectangle.setShortcut('Alt+1')
         createRectangle.triggered.connect(lambda: self.drawEntity('rect'))
-
         rectmenu.addAction(createRectangle)
-
-        # calculate width and height
-        widthAndHeightAction = QAction('&Width and Height', self.__ui)
-        widthAndHeightAction.setShortcut('')
-        widthAndHeightAction.triggered.connect(lambda: self.entitiesActions('widthHeight', "Width and Height", Rectangle))
-    
-        rectmenu.addAction(widthAndHeightAction)
 
         # calculate area and perimeter
         areaPerimeterAction = QAction('&Area and Perimeter', self.__ui)
         areaPerimeterAction.setShortcut('')
         areaPerimeterAction.triggered.connect(lambda: self.entitiesActions('areaPerimeter', "Area and Perimeter", Rectangle))
-    
         rectmenu.addAction(areaPerimeterAction)
+
+        # calculate width and height
+        widthAndHeightAction = QAction('&Width and Height', self.__ui)
+        widthAndHeightAction.setShortcut('')
+        widthAndHeightAction.triggered.connect(lambda: self.entitiesActions('widthHeight', "Width and Height", Rectangle))
+        rectmenu.addAction(widthAndHeightAction)
 
     def TriangleMenu(self):
         TriangleMenu = self.__menubar.addMenu('&Triangle')
@@ -51,35 +47,30 @@ class Menu():
         createTriangle = QAction('&Create Triangle', self.__ui)
         createTriangle.setShortcut('Alt+2')
         createTriangle.triggered.connect(lambda: self.drawEntity('Triangle'))
-
         TriangleMenu.addAction(createTriangle)
         
         # to get area and perimeter information 
         areaPerimeterAction = QAction('&Area and Perimeter', self.__ui)
         areaPerimeterAction.setShortcut('')
         areaPerimeterAction.triggered.connect(lambda: self.entitiesActions('areaPerimeter', 'Area and Perimeter', Triangle))
-
         TriangleMenu.addAction(areaPerimeterAction)
 
         # to get angles and sides information 
         anglesAndSidesAction = QAction('&Angles and Sides', self.__ui)
         anglesAndSidesAction.setShortcut('')
         anglesAndSidesAction.triggered.connect(lambda: self.entitiesActions('anglesSides', 'Angles and Sides', Triangle))
-
         TriangleMenu.addAction(anglesAndSidesAction)
 
         # to get classification information
         classificationAction = QAction('&Triangle Classification', self.__ui)
         classificationAction.setShortcut('')
         classificationAction.triggered.connect(lambda: self.entitiesActions('classify', 'Triangle Classification', Triangle))
-
         TriangleMenu.addAction(classificationAction)
 
         # to get hypotenuse information
         hypotenuseAction = QAction('&Hypotenuse', self.__ui)
         hypotenuseAction.setShortcut('')
         hypotenuseAction.triggered.connect(lambda: self.entitiesActions('hypotenuse', 'Hypotenuse', Triangle))
-
         TriangleMenu.addAction(hypotenuseAction)
     
     def circleMenu(self):
@@ -89,21 +80,18 @@ class Menu():
         createCircle = QAction('&Create Circle', self.__ui)
         createCircle.setShortcut('Alt+3')
         createCircle.triggered.connect(lambda: self.drawEntity('circle'))
-
         circleMenu.addAction(createCircle)
 
         # calculate area and perimeter
         areaAndPerimeter = QAction('&Area and Perimeter', self.__ui)
         areaAndPerimeter.setShortcut('')
         areaAndPerimeter.triggered.connect(lambda: self.entitiesActions('areaPerimeter', "Area and Perimeter", Circle))
-    
         circleMenu.addAction(areaAndPerimeter)
 
         # calculate radius and Diameter
         areaAndPerimeter = QAction('&Radius and Diameter', self.__ui)
         areaAndPerimeter.setShortcut('')
         areaAndPerimeter.triggered.connect(lambda: self.entitiesActions('radiusDiameter', "Radius and Diameter", Circle))
-    
         circleMenu.addAction(areaAndPerimeter)
 
     def pointMenu(self):
@@ -113,28 +101,24 @@ class Menu():
         createPoint = QAction('&Create Point', self.__ui)
         createPoint.setShortcut('Alt+4')
         createPoint.triggered.connect(lambda: self.drawEntity('point'))
-
         pMenu.addAction(createPoint)
 
         # distance from origin
         distanceBetween = QAction('&Distance from Origin', self.__ui)
         distanceBetween.setShortcut('')
         distanceBetween.triggered.connect(lambda: self.entitiesActions('distanceOrigin', "Distance from Origin", Point))
-
         pMenu.addAction(distanceBetween)
 
         # distance: relation between 2 points
         distanceBetween = QAction('&Distance Between Two Points', self.__ui)
         distanceBetween.setShortcut('')
         distanceBetween.triggered.connect(lambda: self.entitiesActions('distanceBetween', "Distance Between Two Points", Point))
-
         pMenu.addAction(distanceBetween)
 
         # median: relation between 2 points
         medianBetween = QAction('&Median Between Two Points', self.__ui)
         medianBetween.setShortcut('')
         medianBetween.triggered.connect(lambda: self.entitiesActions('medianBetween', "Median Between Two Points", Point))
-
         pMenu.addAction(medianBetween)
 
         # check point proximity to a line   
@@ -158,19 +142,16 @@ class Menu():
         createLineSegment.triggered.connect(lambda: self.drawEntity('lineSegment'))
 
         lineMenu.addAction(createLineSegment)
-
         # get line equation
         lineEquation = QAction('&Line Equation', self.__ui)
         lineEquation.setShortcut('')
         lineEquation.triggered.connect(lambda: self.entitiesActions('equation', "Get Equation", Line))
-
         lineMenu.addAction(lineEquation)
 
         # to create check if 2 lines are parallels 
         parallelLines = QAction('&Check parallelism', self.__ui)
         parallelLines.setShortcut('')
         parallelLines.triggered.connect(lambda: self.entitiesActions('areParallel', "Check parallelism", Line))
-
         lineMenu.addAction(parallelLines)
 
     def EntitiesMenu(self):
@@ -326,3 +307,4 @@ class Menu():
             OperationResult(self.__ui, 
                             f'The result of "{actionName}" operation is: <b>{result}</b>'
                             ).open()   
+        

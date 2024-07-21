@@ -1,6 +1,7 @@
+import resources_rc
 
-from PyQt5.QtWidgets import QMainWindow,  QDesktopWidget, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
-from PyQt5.QtGui import QPainter, QPen, QColor, QPolygon, QBrush
+from PyQt5.QtWidgets import QMainWindow,  QDesktopWidget
+from PyQt5.QtGui import QPainter, QPen, QColor, QPolygon, QBrush, QIcon
 from PyQt5.QtCore import Qt, QPoint, QRect, QPointF, QLineF, QRectF, QSizeF
 
 from package.UI.components.Menu import Menu
@@ -26,6 +27,7 @@ class UI(QMainWindow):
         self.__cartesianPlane = cartesianPlane
 
         self.setWindowTitle('Cartesian Plane')
+        self.setWindowIcon(QIcon(':/images/icon.png'))
         self.setGeometry(0, 0, width, height) 
         self.centralize()
         self.setStyleSheet(f"background-color: {self.BACKGROUND_WHITE};")

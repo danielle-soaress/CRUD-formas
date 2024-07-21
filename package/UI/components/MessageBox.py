@@ -1,3 +1,6 @@
+import resources_rc
+
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 
 class MessageBox():
@@ -8,6 +11,7 @@ class MessageBox():
         msg = QMessageBox(self.parent)
         msg.setIcon(icon)
         msg.setWindowTitle(title)
+        msg.setWindowIcon(QIcon(':/images/aviso.png'))
         msg.setText(message)
         msg.setInformativeText(detailed_text)
         msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)

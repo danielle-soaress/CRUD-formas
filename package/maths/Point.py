@@ -60,13 +60,12 @@ class Point(GeometricEntity):
         return math.sqrt((p1.getCoordX() - p2.getCoordX()) ** 2 + (p1.getCoordY() - p2.getCoordY()) ** 2)
     
     @staticmethod
-    def lineSegmentProximity(p1, line):
-        p2,p3 = line.getPoints()
+    def lineSegmentProximity(p3, line):
+        p1,p2 = line.getPoints()
         d1_2 = Point.distanceTo(p1, p2)
         d1 = Point.distanceTo(p1, p3)
         d2 = Point.distanceTo(p2, p3)
         d1_2_3 = d1 + d2
-        print('foi')
         return d1_2_3 <= 1.1 * d1_2
 
     def medianBetween(self, other):

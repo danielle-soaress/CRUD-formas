@@ -1,6 +1,8 @@
+import resources_rc
+
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QDialog, QVBoxLayout, QListWidget, QStackedLayout, QWidget
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QIcon
 from package.UI.dialogues.Dialog import Dialog
 from package.UI.components.Inputs import TextInput, ColorPicker
 from package.UI.components.MessageBox import MessageBox
@@ -10,6 +12,7 @@ class FigureInfoDialog(QDialog):
     def __init__(self, figure, ui=None):
         super().__init__(ui)
         self.setWindowTitle("Entity Info")
+        self.setWindowIcon(QIcon(':/images/lupa.png'))
         self.__ui = ui
         self.__figure = figure
         self.__cartesianPlane = ui.getCartesianPlane()
@@ -49,7 +52,7 @@ class FigureInfoDialog(QDialog):
 
 class EditFigureDialog(Dialog):
     def __init__(self, ui, data, title = "Edit Entity", geometry = [300,300,200,150]):
-        super().__init__(ui, title, geometry)
+        super().__init__(ui, title,QIcon(':/images/editar.png'),  geometry)
         self.__data = data
         self.defineMainLayout()
         self.setLayout(self.layout)
@@ -64,7 +67,7 @@ class EditFigureDialog(Dialog):
             figuresName= self._ui.getCartesianPlane().getEntities()
             figuresName = list(map(lambda x: x.getName(), figuresName))
 
-            if data[0] in figuresName:
+            if data[0] in figuresName and data[0] != self.__data[0]:
                 raise InvalidName('An entity with that name already exists.')
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
@@ -95,6 +98,7 @@ class EditFigureDialog(Dialog):
 class AllFiguresInformation(QDialog):
     def __init__(self, ui, title, geometry=[300, 300, 300, 400]):
         super().__init__()
+        self.setWindowIcon(QIcon(':/images/lista.png'))
         self._ui = ui
         self.setWindowTitle(title)
         self.setGeometry(*geometry)
@@ -201,13 +205,12 @@ class AllFiguresInformation(QDialog):
         
 class DeleteEntities(Dialog):
     def __init__(self,  ui, title, geometry = [100,100,200,100]):
-        super().__init__(ui,title, geometry)
+        super().__init__(ui,title, QIcon(':/images/apagar.png'), geometry)
         # creating the main layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         self.defineMainLayout()
         
-
     def open(self):
         if self.exec_() == QDialog.Accepted:
             self._ui.update()
@@ -244,7 +247,7 @@ class DeleteEntities(Dialog):
 
 class OperationResult(Dialog):
     def __init__(self,  ui, operationResultText, title = 'Operation Result', geometry = [300,300,100,100]):
-        super().__init__(ui,title, geometry)
+        super().__init__(ui,title, QIcon(':/images/calculadora.png'), geometry)
         self.__op_result_text = operationResultText
         self.centralize()
         # creating the main layout
@@ -252,7 +255,6 @@ class OperationResult(Dialog):
         self.setLayout(self.layout)
         self.defineMainLayout()
         
-
     def open(self):
         if self.exec_() == QDialog.Accepted:
             self._ui.update()

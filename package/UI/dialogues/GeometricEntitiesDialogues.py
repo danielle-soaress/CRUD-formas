@@ -1,3 +1,6 @@
+import resources_rc
+
+from PyQt5.QtGui import QIcon
 from package.UI.dialogues.Dialog import Dialog 
 from package.maths.Point import Point
 from package.maths.Line import *
@@ -6,14 +9,12 @@ from package.exceptions.Exceptions import *
 from package.UI.components.MessageBox import MessageBox
 from package.UI.components.Inputs import *
 
-
 class RectangleDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Rectangle information")
+        super().__init__(ui, "Insert Rectangle information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
-
 
     def AreInputsValid(self):
         try:
@@ -39,10 +40,9 @@ class RectangleDialog(Dialog):
     def defineMainLayout(self):
         self.createEntityForm(4)
     
-
 class TriangleDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Triangle information")
+        super().__init__(ui, "Insert Triangle information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -74,7 +74,7 @@ class TriangleDialog(Dialog):
 
 class CircleDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Circle information")
+        super().__init__(ui, "Insert Circle information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -105,7 +105,7 @@ class CircleDialog(Dialog):
     
 class PointDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Point information")
+        super().__init__(ui, "Insert Point information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -133,7 +133,7 @@ class PointDialog(Dialog):
 
 class LineSegmentDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Line information")
+        super().__init__(ui, "Insert Line information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)
@@ -162,7 +162,7 @@ class LineSegmentDialog(Dialog):
 
 class LineDialog(Dialog):
     def __init__(self, ui):
-        super().__init__(ui, "Insert Line information")
+        super().__init__(ui, "Insert Line information", QIcon(':/images/adicionar.png'))
         self.defineMainLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.button_box)

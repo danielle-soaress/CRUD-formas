@@ -1,0 +1,12 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/adicionar.png</file>
+    <file>images/apagar.png</file>
+    <file>images/aviso.png</file>
+    <file>images/calculadora.png</file>
+    <file>images/editar.png</file>
+    <file>images/icon.png</file>
+    <file>images/lista.png</file>
+    <file>images/lupa.png</file>
+</qresource>
+</RCC>

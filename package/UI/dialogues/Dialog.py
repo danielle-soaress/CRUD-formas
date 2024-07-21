@@ -1,3 +1,5 @@
+import resources_rc
+
 from abc import abstractmethod
 from PyQt5.QtWidgets import QDesktopWidget, QDialog, QLineEdit, QSpinBox, QTextEdit, QVBoxLayout, QDialogButtonBox, QComboBox, QStackedWidget
 from package.UI.components.Inputs import *
@@ -5,13 +7,15 @@ from package.exceptions.Exceptions import InvalidAction
 
 
 class Dialog(QDialog):
-    def __init__(self, ui, title, geometry = [300,300,300,200]):
+    def __init__(self, ui, title, icon, geometry = [300,300,300,200]):
         super().__init__()
         self._ui = ui
         self._input_widgets = []
+        
 
         # general settings
         self.setWindowTitle(title)
+        self.setWindowIcon(icon)
         self.setGeometry(geometry[0], geometry[1], geometry[2], geometry[3])
         self.centralize()
 
