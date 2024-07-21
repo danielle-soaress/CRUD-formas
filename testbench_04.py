@@ -1,6 +1,6 @@
 
 from package.maths.Point import Point
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 
 def workspace():
 	try:
@@ -28,11 +28,13 @@ def workspace():
 		print(f'\n Testando a relação entre os pontos: ')
 		print(f'''
         Os pontos são diferentes? {'Sim' if p1.arePointsDifferent(p2) else 'Não'}
-        Distância entre os pontos: {p1.distanceTo(p2):.2f}
+        Distância entre os pontos: {Point.distanceTo(p2):.2f}
         Mediana: {p1.medianBetween(p2)}
         ''')
 		
 	except InvalidAction as e:
+		print(e.message)
+	except InvalidName as e:
 		print(e.message)
 	except TypeError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados e se os dados cumprem os requisitos destacados.')

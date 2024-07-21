@@ -15,7 +15,7 @@ class GeometricEntity():
         return self._fillColor
     
     def setName(self, name):
-        if len(name) > 0 or len(name)<=10:
+        if len(name) > 0 and len(name)<=10:
             self._name = name
         else:
             raise InvalidName('The name must be 0 to 10 characters long.')

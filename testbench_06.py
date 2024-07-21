@@ -1,7 +1,7 @@
 
 from package.maths.Point import Point
 from package.maths.Line import LineSegment
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 
 def workspace():
 	try:
@@ -26,6 +26,8 @@ def workspace():
 		print(rect.model())
 
 	except InvalidAction as e:
+		print(e.message)
+	except InvalidName as e:
 		print(e.message)
 	except TypeError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados.')

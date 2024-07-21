@@ -10,7 +10,7 @@ class Point(GeometricEntity):
         self.__coordY = coordY
 
         if not self.isAPoint():
-            raise InvalidAction("Invalid point. Certify if the numbers are integers.")
+            raise InvalidAction("Invalid point.")
 
     def getCoordX(self):
         return self.__coordX   
@@ -22,10 +22,10 @@ class Point(GeometricEntity):
         return (self.__coordX,self.__coordY)
 
     def isAPoint(self):
-        if (self.__coordX < 0 or self.__coordY < 0):
+        if (self.__coordX < 0 or self.__coordY < 0): # the cartesian plane only allows the visualization of positive points
             return False
         else:
-            if not ((isinstance(self.__coordX, int) or (isinstance(self.__coordX, float) and self.__coordX.is_integer()))):
+            if not ((isinstance(self.__coordX, int) or (isinstance(self.__coordX, float) and self.__coordX.is_integer()))): # the source of PyQt used on UI can only draw integers points
                 return False
             elif not ((isinstance(self.__coordY, int) or 
                     (isinstance(self.__coordY, float) and self.__coordY.is_integer()))):

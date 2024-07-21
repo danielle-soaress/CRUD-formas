@@ -1,4 +1,7 @@
 # Projeto CRUD de Geometria 📐
+<p align="center">
+   <img src="images/preview.png" width="500px">
+</p>
 
 ## Descrição
 
@@ -27,7 +30,7 @@ Este projeto é uma aplicação Python que permite a criação, modificação e 
 
 1. **Clone o Repositório**:
    ```bash
-   git clone https://github.com/seu_usuario/seu_repositorio.git
+   git clone https://github.com/danielle-soaress/CRUD-formas
    ```
 
 2. **Crie e Ative um Ambiente Virtual**:

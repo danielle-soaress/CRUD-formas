@@ -128,7 +128,7 @@ class Circle(Shape):
         self.__radius = radius
 
         if not self.isACircle():
-            raise InvalidAction("The radius value must be between 1 to 10.")
+            raise InvalidAction("The radius value must be between 0 to 10.")
     
     def getRadius(self):
         return self.__radius

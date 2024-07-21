@@ -41,9 +41,9 @@ class Line(GeometricEntity):
         return True if self._points[0].arePointsDifferent(self._points[1]) else False
     
     # to verify if a point is on Line
-    def isPointOnLine(self, point):
-        return (min(self._points[0].getCoordX(), self._points[1].getCoordX()) <= point.getCoordX() <= max(self._points[0].getCoordX(), self._points[1].getCoordX()) 
-                and min(self._points[0].getCoordY(), self._points[1].getCoordY()) <= point.getCoordY() <= max(self._points[0].getCoordY(), self._points[1].getCoordY()))
+    def isPointOnLine(self, x,y):
+        return (min(self._points[0].getCoordX(), self._points[1].getCoordX()) <= x <= max(self._points[0].getCoordX(), self._points[1].getCoordX()) 
+                and min(self._points[0].getCoordY(), self._points[1].getCoordY()) <= y <= max(self._points[0].getCoordY(), self._points[1].getCoordY()))
 
     # to calculate angular coefficient and define de line equation
     def angularCoefficient(self):
@@ -73,35 +73,6 @@ class Line(GeometricEntity):
     def areParallels(self, other):
         return self.angularCoefficient() == other.angularCoefficient()
 
-    def intersection(self, other):
-        p1, p2 = self._points[0].sort2Points(self._points[1])
-        p3, p4 = other.getPoint1().sort2Points(other.getPoint2())
-
-        # angular coefficients
-        m1 = self.angularCoefficient()
-        m2 = other.angularCoefficient()
-
-        # parallels lines
-        if m1 == m2:
-            return "The lines don't intersect"
-
-        # Cálculo do ponto de interseção
-        if m1 is None:  # self is vertical
-            x = p1.getCoordX()
-            y = m2 * (x - p3.getCoordX()) + p3.getCoordY()
-        elif m2 is None:  # other is vertical
-            x = p3.getCoordX()
-            y = m1 * (x - p1.getCoordX()) + p1.getCoordY()
-        else:
-            x = (m1 * p1.getCoordX() - p1.getCoordY() - m2 * p3.getCoordX() + p3.getCoordY()) / (m1 - m2)
-            y = m1 * (x - p1.getCoordX()) + p1.getCoordY()
-
-        intersection_point = Point('intersection', int(x), int(y))
-
-        if self.isPointOnLine(intersection_point) and other.isPointOnLine(intersection_point):
-            return intersection_point.getPoint()
-        return "The lines don't intersect"
-
     def model(self):
         return textwrap.dedent(
         f'''
@@ -126,6 +97,34 @@ class LineSegment(Line):
     def length(self):
         result = math.sqrt((self._points[0].getCoordX() - self._points[1].getCoordX())** 2 + (self._points[0].getCoordY() - self._points[1].getCoordY()) ** 2)
         return result
+    
+    def intersection(self, other):
+        p1, p2 = self._points[0].sort2Points(self._points[1])
+        p3, p4 = other.getPoint1().sort2Points(other.getPoint2())
+
+        # angular coefficients
+        m1 = self.angularCoefficient()
+        m2 = other.angularCoefficient()
+
+        # parallels lines
+        if m1 == m2:
+            return "The lines don't intersect."
+
+        # Cálculo do ponto de interseção
+        if m1 is None:  # self is vertical
+            x = p1.getCoordX()
+            y = m2 * (x - p3.getCoordX()) + p3.getCoordY()
+        elif m2 is None:  # other is vertical
+            x = p3.getCoordX()
+            y = m1 * (x - p1.getCoordX()) + p1.getCoordY()
+        else:
+            x = (m1 * p1.getCoordX() - p1.getCoordY() - m2 * p3.getCoordX() + p3.getCoordY()) / (m1 - m2)
+            y = m1 * (x - p1.getCoordX()) + p1.getCoordY()
+
+
+        if self.isPointOnLine(x,y) and other.isPointOnLine(x,y):
+            return (round(x,2),round(y,2))
+        return "The lines don't intersect."
     
     def model(self):
         return textwrap.dedent(

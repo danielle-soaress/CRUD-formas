@@ -1,6 +1,6 @@
 from package.maths.Shapes import Rectangle
 from package.maths.Point import Point
-from package.exceptions.Exceptions import InvalidAction
+from package.exceptions.Exceptions import *
 
 def workspace():
 	try:
@@ -10,7 +10,7 @@ def workspace():
 		print(f'Para que não haja erros, certifique-se que não tenha espeços desnecessários antes, depois e entre os dados. \n')
 
 
-		name = input('Insira o nome da figura. Não há regras, pode conter apenas letras, apenas números, letras e números e caracteres especiais: ')
+		name = input('Insira o nome da figura. Regras: no máximo 10 caracteres, pode conter apenas letras, apenas números, letras e números e caracteres especiais: ')
 
 		print(f'\nAgora, insira as coordenadas de cada ponto no seguinte formato: "x y" \n Apenas números inteiros!!! \n')
 
@@ -28,9 +28,13 @@ def workspace():
 
 	except InvalidAction as e:
 		print(e.message)
+	except InvalidName as e:
+		print(e.message)
 	except TypeError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados.')
 	except ValueError as e:
+		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados.')
+	except IndexError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados.')
 if (__name__ == "__main__"):
 	workspace()

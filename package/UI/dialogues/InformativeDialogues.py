@@ -179,9 +179,9 @@ class AllFiguresInformation(QDialog):
         self.stacked_layout.setCurrentWidget(self.info_page)
 
     def editFigure(self, item):
-        dialog = EditFigureDialog(self._ui)
+        entity = self._ui.getCartesianPlane().getAEntitieByName(item)
+        dialog = EditFigureDialog(self._ui, [entity.getName(), entity.getFillColor()])
         if dialog.exec_() == QDialog.Accepted:
-            entity = self._ui.getCartesianPlane().getAEntitieByName(item)
             data = dialog.getData()
             entity.setName(data[0])
             entity.setFillColor(data[1])

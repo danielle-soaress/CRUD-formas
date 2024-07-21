@@ -148,10 +148,16 @@ class Menu():
         lineEquation.triggered.connect(lambda: self.entitiesActions('equation', "Get Equation", Line))
         lineMenu.addAction(lineEquation)
 
-        # to create check if 2 lines are parallels 
+        # to check if 2 lines are parallels 
         parallelLines = QAction('&Check parallelism', self.__ui)
         parallelLines.setShortcut('')
         parallelLines.triggered.connect(lambda: self.entitiesActions('areParallel', "Check parallelism", Line))
+        lineMenu.addAction(parallelLines)
+
+        # to get intersection point
+        parallelLines = QAction('&Intersection Point', self.__ui)
+        parallelLines.setShortcut('')
+        parallelLines.triggered.connect(lambda: self.entitiesActions('intersection', "Intersection Point", LineSegment))
         lineMenu.addAction(parallelLines)
 
     def EntitiesMenu(self):
@@ -194,7 +200,7 @@ class Menu():
             if dialog.exec_() == QDialog.Accepted:
                 circle_data = dialog.getData()
                 self.__ui.getCartesianPlane().addEntity(Circle(f'{circle_data[0]}',
-                                                        Point('Central Point', circle_data[1][0], circle_data[1][1]), 
+                                                        Point('central_p', circle_data[1][0], circle_data[1][1]), 
                                                         circle_data[2],
                                                         circle_data[3],
                                                         ))
@@ -253,10 +259,13 @@ class Menu():
                 dialog = EntityActionDialog(self.__ui, actionName, classEntity, True)
                 if dialog.exec_() == QDialog.Accepted:
                     data = dialog.getData()
+                    l1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+                    l2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
                     if action == "areParallel":
-                        l1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
-                        l2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
                         result = "<b>Are parallel</b>" if l1.areParallels(l2) else "<b>Are not parallel</b>"
+                        actionStatus = True
+                    elif action == "intersection":
+                        result = f" <b>{l1.intersection(l2)}</b>"
                         actionStatus = True
         else:
             dialog = ShapesActionsDialog(self.__ui, actionName, classEntity)

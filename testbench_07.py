@@ -19,7 +19,6 @@ def workspace():
 	f'''
 	------- l1 and l2 ---------------
 	Are Parallels? {'Yes' if l1.areParallels(l2) else 'No'}
-	Intersection: {l1.intersection(l2)}
 	''')
 	
 	print(
@@ -33,7 +32,6 @@ def workspace():
 	f'''
 	------- l1 and s2 ---------------
 	Are Parallels? {'Yes' if l1.areParallels(s2) else 'No'}
-	Intersection: {l1.intersection(s2)}
 	''')
 	
 if (__name__ == "__main__"):
