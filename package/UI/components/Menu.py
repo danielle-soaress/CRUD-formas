@@ -126,6 +126,12 @@ class Menu():
         checkLineProximity.setShortcut('')
         checkLineProximity.triggered.connect(lambda: self.entitiesRelationship('lineProximity', "Check Point Proximity to Line", Point, Line))
         pMenu.addAction(checkLineProximity)
+
+        # check if a point is inside a shape  
+        isPointInside = QAction('&Check Point Inside Shape', self.__ui)
+        isPointInside.setShortcut('')
+        isPointInside.triggered.connect(lambda: self.entitiesRelationship('isPointInside', "Check Point Inside Shape", Shape, Point))
+        pMenu.addAction(isPointInside)
   
     def lineMenu(self):
         lineMenu = self.__menubar.addMenu('&Line')
@@ -306,13 +312,15 @@ class Menu():
         if dialog.exec_() == QDialog.Accepted:
             data = dialog.getData()
 
-            point = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
-            line = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
+            ent1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
+            ent2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
             result = None
 
             if action == "lineProximity":
-                result = "The point is close to the Line" if Point.lineSegmentProximity(point, line) else "The point is not close to the Line"
-
+                result = "The point is close to the Line" if Point.lineSegmentProximity(ent1, ent2) else "The point is not close to the Line"
+            if action == "isPointInside":
+                result = "The point is inside the Shape" if ent1.isPointInside(ent2) else "The point is not inside the Shape"
+            
             OperationResult(self.__ui, 
                             f'The result of "{actionName}" operation is: <b>{result}</b>'
                             ).open()   

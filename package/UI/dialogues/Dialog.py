@@ -169,7 +169,6 @@ class Dialog(QDialog):
 
         self.layout.addLayout(self.form_layout)
 
-
     def onSelectionChange(self, index):
         # Alternar o QStackedWidget para exibir o formulário apropriado
         self.stackedWidget.setCurrentIndex(index) 

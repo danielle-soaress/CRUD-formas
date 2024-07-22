@@ -28,7 +28,7 @@ def workspace():
 		print(f'\n Testando a relação entre os pontos: ')
 		print(f'''
         Os pontos são diferentes? {'Sim' if p1.arePointsDifferent(p2) else 'Não'}
-        Distância entre os pontos: {Point.distanceTo(p2):.2f}
+        Distância entre os pontos: {Point.distanceTo(p1,p2):.2f}
         Mediana: {p1.medianBetween(p2)}
         ''')
 		
@@ -40,6 +40,7 @@ def workspace():
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados e se os dados cumprem os requisitos destacados.')
 	except ValueError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados e se os dados cumprem os requisitos destacados.')
+	
 
 if (__name__ == "__main__"):
 	workspace()

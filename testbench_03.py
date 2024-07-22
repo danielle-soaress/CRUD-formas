@@ -27,6 +27,8 @@ def workspace():
 
 	except InvalidAction as e:
 		print(e.message)
+	except InvalidName as e:
+		print(e.message)
 	except TypeError as e:
 		print('Erro! certifique-se que não tenha espeços desnecessários antes, depois e entre os dados e se os dados cumprem os requisitos destacados.')
 	except ValueError as e:

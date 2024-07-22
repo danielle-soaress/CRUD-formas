@@ -33,6 +33,19 @@ class Rectangle(Shape):
     def area(self):
         return self.width() * self.height()
 
+    def isPointInside(self, point):
+        vertices = self.getPoints()
+
+        x_coords = [v.getCoordX() for v in vertices]
+        y_coords = [v.getCoordY() for v in vertices]
+        
+        x_min = min(x_coords)
+        x_max = max(x_coords)
+        y_min = min(y_coords)
+        y_max = max(y_coords)
+
+        return x_min <= point.getCoordX() <= x_max and y_min <= point.getCoordY() <= y_max
+    
     def perimeter(self):
         return self.width()*2+self.height()*2
     
@@ -63,7 +76,17 @@ class Triangle(Shape):
         # used to calculate the area.
         Triangle_area = self.area()
         return Triangle_area > 0
-    
+
+    def isPointInside(self, point):
+        p1, p2, p3 = self.getPoints()
+        area_original = Triangle.triangleArea(p1,p2,p3)
+
+        area1 = Triangle.triangleArea(point, p2, p3)
+        area2 = Triangle.triangleArea(p1, point, p3)
+        area3 = Triangle.triangleArea(p1, p2, point)
+
+        return abs(area_original - (area1 + area2 + area3)) < 1e-10  
+
     def sides(self):
         p1, p2, p3 = self._points[0], self._points[1], self._points[2]
         side1 = math.sqrt((p2.getCoordX() - p1.getCoordX()) ** 2 + (p2.getCoordY() - p1.getCoordY()) ** 2)
@@ -122,6 +145,10 @@ class Triangle(Shape):
             '''
         )
 
+    @staticmethod
+    def triangleArea(p1,p2,p3):
+        return abs((p1.getCoordX()*(p2.getCoordY() - p3.getCoordY()) + p2.getCoordX()*(p3.getCoordY() - p1.getCoordY()) + p3.getCoordX()*(p1.getCoordY() - p2.getCoordY())) / 2.0)
+
 class Circle(Shape):
     def __init__(self, name, point1, radius, fillColor):
         super().__init__(name,[point1], fillColor)
@@ -135,6 +162,12 @@ class Circle(Shape):
 
     def diameter(self):
         return self.__radius*2
+
+    def isPointInside(self, point):
+        center = self.getAPoint(0)
+        radius = self.getRadius()
+        distance = Point.distanceTo(point, center)
+        return distance <= radius
 
     def isACircle(self):
         if not ((isinstance(self.__radius, int) or 
@@ -175,4 +208,6 @@ class Circle(Shape):
             "Points": f'{list(map(lambda x: x.getPoint(), self.getPoints()))}',
             "Radius": self.__radius
         }
+
+
     
