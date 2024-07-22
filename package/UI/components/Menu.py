@@ -245,7 +245,7 @@ class Menu():
                     if action == "distanceBetween" or action == "medianBetween":
                         p1 = self.__ui.getCartesianPlane().getAEntitieByName(data[0])
                         p2 = self.__ui.getCartesianPlane().getAEntitieByName(data[1])
-                        result = f'<b>{Point.distanceTo(p1, p2):.2f}</b>' if action == "distanceBetween" else f'<b>{p1.medianBetween(p2)}</b>'
+                        result = f' <b>{Point.distanceTo(p1, p2):.2f}</b>' if action == "distanceBetween" else f' <b>{p1.medianBetween(p2)}</b>'
                         actionStatus = True
         elif classEntity == Line or classEntity == LineSegment:
             if action == 'equation':
@@ -311,7 +311,7 @@ class Menu():
             result = None
 
             if action == "lineProximity":
-                result = Point.lineSegmentProximity(point, line)
+                result = "The point is close to the Line" if Point.lineSegmentProximity(point, line) else "The point is not close to the Line"
 
             OperationResult(self.__ui, 
                             f'The result of "{actionName}" operation is: <b>{result}</b>'

@@ -28,7 +28,7 @@ class UI(QMainWindow):
 
         self.setWindowTitle('Cartesian Plane')
         self.setWindowIcon(QIcon(':/images/icon.png'))
-        self.setGeometry(0, 0, width, height) 
+        self.setFixedSize(width, height)
         self.centralize()
         self.setStyleSheet(f"background-color: {self.BACKGROUND_WHITE};")
 

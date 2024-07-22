@@ -31,7 +31,7 @@ class EntityActionDialog(Dialog):
             if self.__doubleForm:
                 data = self.getData()
                 if data[0] == data[1]:
-                    raise InvalidAction("You can't select the same points.")
+                    raise InvalidAction("You can't select the same entity.")
 
         except InvalidAction as e:
             MessageBox(self).showMessage('Error!', e.message)
