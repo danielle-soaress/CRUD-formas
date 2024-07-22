@@ -62,14 +62,14 @@ class CartesianPlane():
                     if isinstance(figure, Rectangle) and isinstance(entity, Rectangle) and figure_points == entity_points:
                         raise InvalidAction("The Rectangle you're trying to create already exists.")
                     if isinstance(figure, Triangle) and isinstance(entity, Triangle)and figure_points == entity_points:
-                        raise InvalidAction("The Rectangle you're trying to create already exists.")
+                        raise InvalidAction("The Triangle you're trying to create already exists.")
                     if isinstance(figure, Circle) and isinstance(entity, Circle) and figure_points == entity_points:
-                        raise InvalidAction("The Rectangle you're trying to create already exists.")                
+                        raise InvalidAction("The Circle you're trying to create already exists.")                
                     if isinstance(entity, Point) and isinstance(figure, Point) and entity.getPoint() == figure.getPoint():
-                        raise InvalidAction("The Rectangle you're trying to create already exists.")
+                        raise InvalidAction("The Point you're trying to create already exists.")
                 if isinstance(entity, Line) and isinstance(figure, Line):
                         p1, p2 = list(map(lambda p: p.getPoint(), figure.getPoints()))
                         p3, p4 = list(map(lambda p: p.getPoint(), entity.getPoints()))
                         if p1 == p3 and p2 == p4:
-                            raise InvalidAction("The Rectangle you're trying to create already exists.")
+                            raise InvalidAction("The Line you're trying to create already exists.")
         return True

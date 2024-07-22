@@ -16,7 +16,7 @@ class EntityActionDialog(Dialog):
         
         quantityEntities = len(self.__cartesianPlane.getAllClassEntities(className))
         if (doubleForm == True and quantityEntities <2) or (doubleForm == False and quantityEntities == 0):
-            MessageBox(self).showMessage('Error!', "There are not enough entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
+            MessageBox(self).showMessage('Error!', f"There are not enough '{className.__name__}' entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
             QTimer.singleShot(0, self.reject)
 
         self.defineMainLayout()
@@ -54,7 +54,7 @@ class ShapesActionsDialog(Dialog):
         self.__cartesianPlane = self._ui.getCartesianPlane()
         self.__ShapeClass = shapeClass
         if len(self.__cartesianPlane.getAllClassEntities(shapeClass)) == 0:
-            MessageBox(self).showMessage('Error!', "There are not enough entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
+            MessageBox(self).showMessage('Error!', f"There are not enough '{shapeClass.__name__}' entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
             QTimer.singleShot(0, self.reject)
 
         self.defineMainLayout()
@@ -88,7 +88,7 @@ class EntitiesRelationship(Dialog):
         self.__class2 = class2
 
         if len(self.__cartesianPlane.getAllClassEntities(class1)) == 0 or len(self.__cartesianPlane.getAllClassEntities(class2)) == 0:
-            MessageBox(self).showMessage('Error!', "There are not enough entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
+            MessageBox(self).showMessage('Error!', f"There are not enough '{class1.__name__}' and '{class2.__name__}' entities on the Cartesian plane to perform this operation.", "Please, create more entities and try again.")
             QTimer.singleShot(0, self.reject)
 
         self.defineMainLayout()
